@@ -1,0 +1,14 @@
+{
+    "folders": [
+        {
+            "name": "Key Based Tree",
+            "path": "./main"
+        }
+    ],
+    "settings": {},
+    "extensions": {
+        "recommendations": [
+            "dbaeumer.vscode-eslint"
+        ]
+    }
+}
