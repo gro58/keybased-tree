@@ -1,6 +1,6 @@
 {
   "name": "keybased-tree",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "define tree and node objects using a unique key for every node",
   "main": "src/index.js",
   "scripts": {
