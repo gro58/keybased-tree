@@ -1,4 +1,5 @@
 node_modules/
 obsolete/
+dest/
 nextpatchnumber.txt
 cheat.txt
