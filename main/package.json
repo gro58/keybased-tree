@@ -1,11 +1,16 @@
 {
   "name": "keybased-tree",
-  "version": "0.0.11",
+  "version": "0.0.14",
   "description": "define tree and node objects using a unique key for every node",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "public": "sirv public --port 9000"
+    "push": "npm run patch && npm run push:git && npm run public",
+    "patch": "npm version patch && npm run public",
+    "push:git": "git push --tags origin HEAD:master",
+    "public": "sirv public --port 9000",
+    "launch": "open http://localhost:9000/",
+    "start": "todo node --harmony app.js"
   },
   "repository": {
     "type": "git",
