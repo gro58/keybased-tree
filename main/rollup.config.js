@@ -31,12 +31,12 @@ function getCopyTargets(filename) {
 	else throw Error("Invalid extension");
 	targets.push({
 		src: `./public/${ filename }`,
-		dest: `./dest/${ filename }`
+		dest: `./dest/build`
 	});
 	if (!production && extension === "js") {
 		targets.push({
 			src: `./public/${ filename.replace('.js', '.js.map') }`,
-			dest: `./dest/${ filename }`
+			dest: `./dest/build`
 		});
 	}
 	console.log(targets);
@@ -53,7 +53,7 @@ function resolveAfter4Seconds(x) {
 
 async function myTest() {
 	console.log('before await');
-	var y = await resolveAfter4Seconds('version='+ process.env.npm_package_version);
+	var y = await resolveAfter4Seconds('version=' + process.env.npm_package_version);
 	console.log(y);
 	// console.log(targets);
 }
