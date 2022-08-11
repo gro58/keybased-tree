@@ -1,0 +1,19 @@
+{
+  "name": "keybased-tree",
+  "version": "0.0.2",
+  "description": "define tree and node objects using a unique key for every node",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tree",
+    "key",
+    "node"
+  ],
+  "author": "gro58",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
