@@ -1,6 +1,6 @@
 {
   "name": "keybased-tree",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "define tree and node objects using a unique key for every node",
   "main": "src/index.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@rollup/plugin-replace": "^3.0.0",
     "cross-env": "^7.0.3",
-    "eslint": "^7.32.0",
+    "eslint": "7.32.0",
     "rollup": "^2.62.0",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-livereload": "^2.0.5",
