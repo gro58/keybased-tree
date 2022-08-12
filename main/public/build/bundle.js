@@ -10,7 +10,7 @@ var bridge = (function (exports) {
     	htmloutput: htmloutput
     };
 
-    var version = "0.0.30";
+    var version = "0.0.32";
 
     /**
      * 
@@ -27,12 +27,19 @@ var bridge = (function (exports) {
         this.content = content;
     }
 
+    // variable tree has to be outside of createTree to have access to createNode
     var tree = {
         'root': new node('rootcontent'),
         addNode: function (parentKey, newContent) {
             return createNode(this, parentKey, newContent);
         }
     };
+
+    function createTree(rootcontent){
+        var newTree = Object.create(tree);
+        newTree.root.content = rootcontent;
+        return newTree;
+    }
 
     function createNode(tree, parentKey, newContent) {
         // console.log('add node with content ' + newContent + ' to parent with key ' + parentKey);
@@ -64,8 +71,25 @@ var bridge = (function (exports) {
         return result;
     }
 
+    /**
+     * create a tree for test purposes (e.g. traversing)
+     * using addNode
+     */
+    function demoTree() {
+        var tree = createTree('Demo Tree');
+        var w = tree.addNode("root", "content-W");
+        tree.addNode("root", "content-Y");
+        tree.addNode(w.key, "content-R");
+        var s = tree.addNode(w.key, "content-S");
+        tree.addNode(w.key, "content-E");
+        tree.addNode(s.key, "content-T");
+        return tree;
+    }
+
     window.onload = function () {
-        console.log('version (from package.json) ', version);
+        // console.log('version (from package.json) ', version);
+        var newTree = demoTree();
+        console.log(newTree);
     };
 
     function mainIsLoaded() {
@@ -73,8 +97,9 @@ var bridge = (function (exports) {
     }
 
     exports.config = config;
+    exports.createTree = createTree;
+    exports.demoTree = demoTree;
     exports.mainIsLoaded = mainIsLoaded;
-    exports.tree = tree;
     exports.version = version;
 
     Object.defineProperty(exports, '__esModule', { value: true });

@@ -13,12 +13,19 @@ function node(content) {
     this.content = content;
 }
 
-export var tree = {
+// variable tree has to be outside of createTree to have access to createNode
+var tree = {
     'root': new node('rootcontent'),
     addNode: function (parentKey, newContent) {
         return createNode(this, parentKey, newContent);
     }
 };
+
+export function createTree(rootcontent){
+    var newTree = Object.create(tree);
+    newTree.root.content = rootcontent;
+    return newTree;
+}
 
 function createNode(tree, parentKey, newContent) {
     // console.log('add node with content ' + newContent + ' to parent with key ' + parentKey);
