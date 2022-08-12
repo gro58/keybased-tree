@@ -3,6 +3,10 @@
         {
             "name": "Key Based Tree",
             "path": "./main"
+        },
+        {
+            "name": "ExperimentalTree",
+            "path": "../gf09-h5p/main/src2"
         }
     ],
     "settings": {},
