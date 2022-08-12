@@ -6,14 +6,12 @@
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <title>Key Based Tree</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='./css/keybasedTree.css'>
     <script src='build/bundle.js'></script>
     <script>
         // console.log('bridge', bridge);
         console.log('version (from package.json) ', bridge.version);
-        var tree = bridge.createTree('a new root content');
-        // console.log(bridge.tree.root);
-        var newNode = tree.addNode("root", "'The added content'");
-        console.log('new node', newNode);
+        var tree = bridge.demoTree('a new root content');
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
             var Output = document.querySelector('#out');
@@ -32,7 +30,7 @@
     <h2>livereload</h2>
     <p id="out"></p>
     <hr>
-    <div><span><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
+    <div><span id="icons8"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
                 class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a
                 target="_blank" href="https://icons8.com"
                 class="fdm__copy-html-content fdm__copy-html-content-link">Icons8</a></span></div>

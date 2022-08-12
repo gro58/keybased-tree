@@ -10,8 +10,6 @@ var bridge = (function (exports) {
     	htmloutput: htmloutput
     };
 
-    var version = "0.0.32";
-
     /**
      * 
      * @param {*} content 
@@ -85,6 +83,8 @@ var bridge = (function (exports) {
         tree.addNode(s.key, "content-T");
         return tree;
     }
+
+    var version = "0.0.34";
 
     window.onload = function () {
         // console.log('version (from package.json) ', version);
