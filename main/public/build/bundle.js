@@ -134,7 +134,7 @@ var bridge = (function (exports) {
         var tree = createTree('Demo Tree');
         var w = tree.addNode("root", "content-W");
         var y = tree.addNode("root", "content-Y");
-        tree.addNode(w.key, "content-R");
+        tree.addNode(w.key, "content-A");
         var s = tree.addNode(w.key, "content-S");
         tree.addNode(w.key, "content-E");
         tree.addNode(s.key, "content-T");
@@ -143,7 +143,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.0.40";
+    var version = "0.0.42";
 
     window.onload = function () {
         console.log('version (from package.json) ', version);

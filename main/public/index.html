@@ -14,8 +14,6 @@
         var tree = bridge.demoTree('Demo Tree Root Content');
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
-            // var Output = document.querySelector('#out');
-            // Output.textContent = JSON.stringify(tree);
             console.log(tree);
             var collect = '';
             var logNodeWithDashes = function (level, currentNode) {
@@ -26,9 +24,11 @@
                 // console.log(dashes, currentNode.content);
             };
             tree.fromRootToLeaf(logNodeWithDashes);
-            console.log(collect);
+            // console.log(collect);
             var OutputArea = document.querySelector('#outarea');
             OutputArea.innerHTML = collect;
+            var Output = document.querySelector('#out');
+            Output.textContent = JSON.stringify(tree);
         });
     </script>
     <!-- <script type='module' src='build/translate.js'></script>       -->
