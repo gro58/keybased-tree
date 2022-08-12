@@ -1,1 +1,1 @@
-var bridge=function(e){"use strict";var t={unit_replacement:"\\textcolor{blue}{",htmloutput:"true"};return e.config=t,e.mainIsLoaded=function(){return!0},Object.defineProperty(e,"__esModule",{value:!0}),e}({});
+var bridge=function(e){"use strict";var n={unit_replacement:"\\textcolor{blue}{",htmloutput:"true"};return window.onload=function(){console.log("package version","0.0.25")},e.config=n,e.mainIsLoaded=function(){return!0},Object.defineProperty(e,"__esModule",{value:!0}),e}({});

@@ -17,7 +17,8 @@ import replace from '@rollup/plugin-replace';
 import babel from '@rollup/plugin-babel';
 
 const production = process.env.PRODUCTION === "true";
-console.log(process.env.npn_package_version);
+console.log('process.env.npm_package_version ');
+console.log(process.env.npm_package_version);
 console.log("PRODUCTION", production, "(env: " + process.env.PRODUCTION + ")");
 
 const serveWanted = process.env.SERVE === "true";
