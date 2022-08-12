@@ -1,0 +1,12 @@
+{
+    "name": "Key Based Tree",
+    "description": "create tree, add and remove nodes, traverse",
+	"tags": {
+		"allowUnknownTags": true
+	},
+	"source": {
+		"include": ["src"],
+		"includePattern": ".+\\.js(doc|x)?$",
+		"excludePattern": "(^|\\/|\\\\)_"
+	}
+}

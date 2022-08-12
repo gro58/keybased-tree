@@ -1,5 +1,6 @@
 node_modules/
 obsolete/
 dest/
+docs/
 nextpatchnumber.txt
 cheat.md
