@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
     createTree
 } from './keybasedTree.js';
