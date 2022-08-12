@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-    <title>Key Based Tree</title>
+    <title>key based tree</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='./css/keybasedTree.css'>
     <script src='build/bundle.js'></script>
@@ -14,15 +14,21 @@
         var tree = bridge.demoTree('Demo Tree Root Content');
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
-            var Output = document.querySelector('#out');
-            Output.textContent = JSON.stringify(tree);
+            // var Output = document.querySelector('#out');
+            // Output.textContent = JSON.stringify(tree);
             console.log(tree);
+            var collect = '';
             var logNodeWithDashes = function (level, currentNode) {
                 var dashes = Array(level + 1).join("--");
-                console.log(dashes, currentNode.content);
+                collect += dashes;
+                collect += currentNode.content;
+                collect += '&#13;&#10;'; //CRLF
+                // console.log(dashes, currentNode.content);
             };
             tree.fromRootToLeaf(logNodeWithDashes);
-            // traverseRootToLeafs(tree, logNodeWithDashes);
+            console.log(collect);
+            var OutputArea = document.querySelector('#outarea');
+            OutputArea.innerHTML = collect;
         });
     </script>
     <!-- <script type='module' src='build/translate.js'></script>       -->
@@ -33,9 +39,10 @@
         <a href="./tests.html">Tests</a>
         <a href="./license.html">License</a>
     </nav>
-    <h1>Key Based Tree</h1>
-    <h2>livereload</h2>
+    <h1>key based tree</h1>
+    <h2>livereload active</h2>
     <p id="out"> </p>
+    <textarea id="outarea" cols='60' rows='30'>This is my statement one.&#13;&#10;This is my statement2</textarea>
     <hr>
     <div><span id="icons8"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
                 class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a
