@@ -3,11 +3,13 @@
 
 import config from "./js/config.json";
 import {version} from '../package.json';
+import {tree} from './js/keybasedTree.js';
 
-
-// bridge
+// after import of bundle, using <script src='build/bundle.js'></script>,
+// the bridge object with the following exports is available, e.g. using <script> in HTML
 export {
-    config
+    config,
+    tree
 };
 
 window.onload = function () {
