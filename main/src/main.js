@@ -16,9 +16,9 @@ export {
 };
 
 window.onload = function () {
-    // console.log('version (from package.json) ', version);
-    var newTree = demoTree();
-    console.log(newTree);
+    console.log('version (from package.json) ', version);
+    // var newTree = demoTree();
+    // console.log(newTree);
 };
 
 export function mainIsLoaded() {

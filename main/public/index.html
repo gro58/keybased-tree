@@ -11,11 +11,18 @@
     <script>
         // console.log('bridge', bridge);
         console.log('version (from package.json) ', bridge.version);
-        var tree = bridge.demoTree('a new root content');
+        var tree = bridge.demoTree('Demo Tree Root Content');
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
             var Output = document.querySelector('#out');
             Output.textContent = JSON.stringify(tree);
+            console.log(tree);
+            var logNodeWithDashes = function (level, currentNode) {
+                var dashes = Array(level + 1).join("--");
+                console.log(dashes, currentNode.content);
+            };
+            tree.fromRootToLeaf(logNodeWithDashes);
+            // traverseRootToLeafs(tree, logNodeWithDashes);
         });
     </script>
     <!-- <script type='module' src='build/translate.js'></script>       -->
@@ -28,7 +35,7 @@
     </nav>
     <h1>Key Based Tree</h1>
     <h2>livereload</h2>
-    <p id="out"></p>
+    <p id="out"> </p>
     <hr>
     <div><span id="icons8"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
                 class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a

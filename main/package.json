@@ -1,15 +1,15 @@
 {
   "name": "keybased-tree",
-  "version": "0.0.35",
+  "version": "0.0.40",
   "description": "define tree and node objects using a unique key for every node",
   "main": "src/js/index.js",
   "scripts": {
-    "start": "npm version patch && cross-env PRODUCTION=\"false\" SERVE=\"true\" rollup -c -w",
+    "start": "npm run patch && cross-env PRODUCTION=\"false\" SERVE=\"true\" rollup -c -w",
     "build": "cross-env PRODUCTION=\"true\" rollup -c",
     "doc": "jsdoc -d docs --configure jsconf.json src/js/",
     "test": "echo \"Error: no test specified\" && exit 1",
     "push": "npm run patch && npm run push:git && npm run public",
-    "patch": "npm version patch && npm run public",
+    "patch": "npm version patch",
     "push:git": "git push --tags origin HEAD:master",
     "public": "sirv public --port 9000",
     "launch": "open http://localhost:9000/"
