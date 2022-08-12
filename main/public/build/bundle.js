@@ -1,3 +1,5 @@
+
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
 var bridge = (function (exports) {
     'use strict';
 
@@ -8,10 +10,16 @@ var bridge = (function (exports) {
     	htmloutput: htmloutput
     };
 
-    var version = "0.0.29";
+    var version = "0.0.30";
 
-    exports.tree = void 0;
-
+    /**
+     * 
+     * @param {*} content 
+     * default node structure
+     * parent and children are represented by their keys or array of keys
+     * use of keys is preferred to use of references to parent nodes or child nodes
+     * use of keys avoids problems with e.g. circular dependencies if using JSON.stringify
+     */
     function node(content) {
         this.parentKey = null;
         this.children = [];
@@ -19,7 +27,7 @@ var bridge = (function (exports) {
         this.content = content;
     }
 
-    exports.tree = {
+    var tree = {
         'root': new node('rootcontent'),
         addNode: function (parentKey, newContent) {
             return createNode(this, parentKey, newContent);
@@ -66,6 +74,7 @@ var bridge = (function (exports) {
 
     exports.config = config;
     exports.mainIsLoaded = mainIsLoaded;
+    exports.tree = tree;
     exports.version = version;
 
     Object.defineProperty(exports, '__esModule', { value: true });

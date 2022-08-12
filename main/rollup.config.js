@@ -1,11 +1,8 @@
 // script definitions see package.json
-
-/* eslint-disable no-undef */
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import builtins from 'rollup-plugin-node-builtins';
-// import livereload from 'rollup-plugin-livereload';
-
+import livereload from 'rollup-plugin-livereload';
 // https://www.npmjs.com/package/rollup-plugin-copy-watch
 import copy from 'rollup-plugin-copy-watch';
 // import copy from 'rollup-plugin-copy';
@@ -101,9 +98,9 @@ export default [{
 		// browser on changes when serving
 
 		// enable/disable livereload here AND AT IMPORTS by uncommenting/commenting
-		// !production && livereload("public", {
-		// 	port: 5001
-		// }),
+		!production && livereload("public", {
+			port: 5001
+		}),
 
 		// If we're building for production, minify
 		production && terser(),

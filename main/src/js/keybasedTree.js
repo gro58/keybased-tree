@@ -1,5 +1,11 @@
-export var tree;
-
+/**
+ * 
+ * @param {*} content 
+ * default node structure
+ * parent and children are represented by their keys or array of keys
+ * use of keys is preferred to use of references to parent nodes or child nodes
+ * use of keys avoids problems with e.g. circular dependencies if using JSON.stringify
+ */
 function node(content) {
     this.parentKey = null;
     this.children = [];
@@ -7,7 +13,7 @@ function node(content) {
     this.content = content;
 }
 
-tree = {
+export var tree = {
     'root': new node('rootcontent'),
     addNode: function (parentKey, newContent) {
         return createNode(this, parentKey, newContent);
