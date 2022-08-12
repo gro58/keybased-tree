@@ -8,24 +8,53 @@ var bridge = (function (exports) {
     	htmloutput: htmloutput
     };
 
-    var version = "0.0.26";
+    var version = "0.0.29";
 
-    function node(content){
+    exports.tree = void 0;
+
+    function node(content) {
         this.parentKey = null;
         this.children = [];
         this.isLeaf = (this.children.length === 0);
         this.content = content;
     }
 
-    var tree = {
-        'root': new node('rootcontent')
+    exports.tree = {
+        'root': new node('rootcontent'),
+        addNode: function (parentKey, newContent) {
+            return createNode(this, parentKey, newContent);
+        }
     };
 
-    console.log(tree);
+    function createNode(tree, parentKey, newContent) {
+        // console.log('add node with content ' + newContent + ' to parent with key ' + parentKey);
+        var parent = tree[parentKey];
+        if (parent) {
+            var newKey = randomKey(10);
+            var newNode = {
+                key: newKey,
+                content: newContent,
+                parentKey: parentKey
+            };
+            tree[newKey] = newNode;
+            parent.children = [...(parent.children || []), newNode.key];
+            return newNode;
+        } else {
+            console.log('unknown parent key: ', parentKey);
+            return null;
+        }
+    }
+    // console.log(tree);
 
-    // tree.Prototype.addNode= function(parentKey){
-    //     console.log('add node to ', parentKey);
-    // }
+    function randomKey(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+        var numOfChars = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * numOfChars));
+        }
+        return result;
+    }
 
     window.onload = function () {
         console.log('version (from package.json) ', version);
@@ -37,7 +66,7 @@ var bridge = (function (exports) {
 
     exports.config = config;
     exports.mainIsLoaded = mainIsLoaded;
-    exports.tree = tree;
+    exports.version = version;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

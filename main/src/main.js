@@ -9,7 +9,8 @@ import {tree} from './js/keybasedTree.js';
 // the bridge object with the following exports is available, e.g. using <script> in HTML
 export {
     config,
-    tree
+    tree,
+    version
 };
 
 window.onload = function () {
