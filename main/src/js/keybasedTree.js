@@ -27,10 +27,10 @@ var tree = {
     fromLeafsToRoot: function (callback) {
         traverseLeafsToRoot(this, callback);
     },
-    remove: function(key){
+    remove: function (key) {
         var node = removeNode(this, key);
-        if (typeof node === 'undefined'){
-            node = '- no node';
+        if (node === undefined) {
+            node = {content: 'nothing'};
         }
         return node;
     }
@@ -81,7 +81,7 @@ function createNode(tree, parentKey, newContent) {
         parent.children = [...(parent.children || []), newNode.key]
         return newNode;
     } else {
-        console.log('unknown parent key: ', parentKey);
+        console.warn('unknown parent key: ', parentKey);
         return undefined;
     }
 }
@@ -89,35 +89,50 @@ function createNode(tree, parentKey, newContent) {
 function removeNode(tree, key) {
     var node = tree[key];
     if (node) {
-        console.log(node.key,'has children',node.children);
+        console.log(node.key, 'has children', node.children);
         // TODO necessary? if(node.children && node.children.length > 0){}
+        var parent, childIndex, node_clone;
         switch (node.children.length) {
             case 0:
                 // no children
-                var parent = tree[node.parentKey];
+                parent = tree[node.parentKey];
                 if (parent) {
-                    var childIndex = parent.children.indexOf(key);
+                    childIndex = parent.children.indexOf(key);
                     // remove key from array of children of parent
                     parent.children.splice(childIndex);
-                    var node_clone = JSON.parse(JSON.stringify(node));
+                    node_clone = JSON.parse(JSON.stringify(node));
                     delete tree[key];
                     return node_clone;
                 } else {
-                    console.log('root cannot be removed');
+                    console.warn('root cannot be removed');
                 }
-                return node;
+                return node; //no break necessary
             case 1:
                 // exactly one child
-                console.log('remove node with one child - not yet implemented');
-                break;
+                parent = tree[node.parentKey];
+                if (parent) {
+                    childIndex = parent.children.indexOf(key);
+                    var grandchildKey = node.children[0];
+                    var grandchild = tree[grandchildKey];
+                    // replace key of child with key of grandchild in array of children of parent
+                    parent.children[childIndex] = grandchildKey;
+                    // replace parentKey of grandchild with parentKey of node
+                    grandchild.parentKey = node.parentKey;
+                    node_clone = JSON.parse(JSON.stringify(node));
+                    delete tree[key];
+                    return node_clone; //no break necessary
+                } else {
+                    console.warn('root cannot be removed');
+                }
+                return node; //no break necessary
             default:
                 // more than one child
-                console.log('node with more than one child cannot be removed');
+                console.warn('node with more than one child cannot be removed');
         }
         // console.log(tree);
 
     } else {
-        console.log('node with key', key, 'does not exist');
+        console.warn('node with key', key, 'does not exist');
         return undefined;
     }
 }
@@ -152,7 +167,7 @@ function nonexistingRandomKey(tree, length) {
             i = numOfTries; // short circuit
         } else {
             // no new key found; try again
-            console.log('try number', i, 'not successful:', candidate, 'exists');
+            console.warn('try number', i, 'not successful:', candidate, 'exists');
         }
     }
     if (newKey === null) {

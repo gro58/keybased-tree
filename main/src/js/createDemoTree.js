@@ -21,14 +21,14 @@ export function demoTree() {
     // removing nodes -testcase
     var removedNode;
     removedNode = tree.remove('dummy-key');
-    console.log('removed', removedNode);
+    console.log('removed:', removedNode.content);
     removedNode = tree.remove(s.key);
-    console.log('removed', removedNode);
+    console.log('removed:', removedNode.content);
     removedNode = tree.remove(e.key);
-    console.log('removed', removedNode);
+    console.log('removed:', removedNode.content);
     removedNode = tree.remove('root');
-    console.log('removed', removedNode);
+    console.log('removed:', removedNode.content);
     removedNode = tree.remove(y.key);
-    console.log('removed', removedNode);
+    console.log('removed:', removedNode.content);
     return tree;
 }
