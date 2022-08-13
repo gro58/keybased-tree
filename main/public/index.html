@@ -14,7 +14,7 @@
         var tree = bridge.demoTree('Demo Tree Root Content');
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
-            console.log(tree);
+            // console.log(tree);
             var collect = '';
             var logNodeWithDashes = function (level, currentNode) {
                 var dashes = Array(level + 1).join("--");
@@ -23,12 +23,13 @@
                 collect += '&#13;&#10;'; //CRLF
                 // console.log(dashes, currentNode.content);
             };
-            tree.fromRootToLeaf(logNodeWithDashes);
+            tree.fromRootToLeafs(logNodeWithDashes);
+            collect += '---------------------------------&#13;&#10;'
+            tree.fromLeafsToRoot(logNodeWithDashes);
             // console.log(collect);
-            var OutputArea = document.querySelector('#outarea');
-            OutputArea.innerHTML = collect;
-            var Output = document.querySelector('#out');
-            Output.textContent = JSON.stringify(tree);
+            document.querySelector('#outarea').innerHTML = collect;
+            document.querySelector('#versioninfo').innerHTML = bridge.version;
+            document.querySelector('#out').textContent = JSON.stringify(tree);
         });
     </script>
     <!-- <script type='module' src='build/translate.js'></script>       -->
@@ -41,6 +42,7 @@
     </nav>
     <h1>key based tree</h1>
     <h2>livereload active</h2>
+    <p>Version: <span id="versioninfo">version</span></p>
     <p id="out"> </p>
     <textarea id="outarea" cols='60' rows='30'>This is line one.&#13;&#10;This is line two.</textarea>
     <hr>

@@ -1,5 +1,6 @@
 import {
-    traverseRootToLeafs
+    traverseRootToLeafs,
+    traverseLeafsToRoot
 } from './traverseTree.js';
 
 // variable tree has to be definde outside of createTree to have access to createNode
@@ -9,15 +10,29 @@ var tree = {
             return createNode(this, parentKey, newContent);
         } else {
             console.error('parentKey undefined or null');
-            return null;
+            return undefined;
         }
     },
     /**
      * 
      * @param {function(level, currentNode)} callback - function applied to current node while traversing the tree
      */
-    fromRootToLeaf: function (callback) {
+    fromRootToLeafs: function (callback) {
         traverseRootToLeafs(this, callback);
+    },
+    /**
+     * 
+     * @param {function(level, currentNode)} callback - function applied to current node while traversing the tree
+     */
+    fromLeafsToRoot: function (callback) {
+        traverseLeafsToRoot(this, callback);
+    },
+    remove: function(key){
+        var node = removeNode(this, key);
+        if (typeof node === 'undefined'){
+            node = '- no node';
+        }
+        return node;
     }
 };
 
@@ -50,14 +65,14 @@ export function createTree(rootcontent) {
  * @returns the new node or null, if parent key not found in tree
  */
 function createNode(tree, parentKey, newContent) {
-    // console.log('add node with content ' + newContent + ' to parent with key ' + parentKey);
     var parent = tree[parentKey];
     if (parent) {
-        var newKey = sureRandomKey(tree, 3);
+        var newKey = nonexistingRandomKey(tree, 3);
         var newNode = {
             key: newKey,
-            content: newContent,
             parentKey: parentKey,
+            children: [],
+            content: newContent,
             isLeaf: function () {
                 return (this.children.length === 0);
             }
@@ -67,11 +82,51 @@ function createNode(tree, parentKey, newContent) {
         return newNode;
     } else {
         console.log('unknown parent key: ', parentKey);
-        return null;
+        return undefined;
     }
 }
-// console.log(tree);
 
+function removeNode(tree, key) {
+    var node = tree[key];
+    if (node) {
+        console.log(node.key,'has children',node.children);
+        // TODO necessary? if(node.children && node.children.length > 0){}
+        switch (node.children.length) {
+            case 0:
+                // no children
+                var parent = tree[node.parentKey];
+                if (parent) {
+                    var childIndex = parent.children.indexOf(key);
+                    // remove key from array of children of parent
+                    parent.children.splice(childIndex);
+                    var node_clone = JSON.parse(JSON.stringify(node));
+                    delete tree[key];
+                    return node_clone;
+                } else {
+                    console.log('root cannot be removed');
+                }
+                return node;
+            case 1:
+                // exactly one child
+                console.log('remove node with one child - not yet implemented');
+                break;
+            default:
+                // more than one child
+                console.log('node with more than one child cannot be removed');
+        }
+        // console.log(tree);
+
+    } else {
+        console.log('node with key', key, 'does not exist');
+        return undefined;
+    }
+}
+
+/**
+ * 
+ * @param {*} length - length of key to be generated
+ * @returns {string} - consists of chars randomly picked from 'characters'
+ */
 function randomKey(length) {
     var result = '';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
@@ -83,8 +138,8 @@ function randomKey(length) {
     return result;
 }
 
-function sureRandomKey(tree, length) {
-    const numOfTries = 10; 
+function nonexistingRandomKey(tree, length) {
+    const numOfTries = 10;
     // const numOfTries = 5; // for test
     var existingKeys = Object.keys(tree);
     // console.log('existingKeys', existingKeys);
@@ -100,7 +155,7 @@ function sureRandomKey(tree, length) {
             console.log('try number', i, 'not successful:', candidate, 'exists');
         }
     }
-    if (newKey === null){
+    if (newKey === null) {
         throw 'no new key found';
     }
     return newKey;

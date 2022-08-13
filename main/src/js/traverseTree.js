@@ -1,4 +1,6 @@
 /**
+ * Code for traversing: 
+ * https://code.tutsplus.com/articles/data-structures-with-javascript-tree--cms-23393 
  * 
  * @param {*} tree - tree to be trafersed
  * @param {*} currentNode - current node while recursing
@@ -31,4 +33,17 @@ export function traverseRootToLeafs(tree, callback) {
     var emptyFunc = function () {};
     var currentNode = tree['root'];
     recurseNode(tree, currentNode, callback, emptyFunc, 0);
+}
+
+/**
+ * 
+ * @param {*} tree -  keybased tree object
+ * @param {*} callback - function callbackLeaving(level, currentNode)
+ * called when leaving current node
+ */
+ export function traverseLeafsToRoot(tree, callback) {
+    var emptyFunc = function () {};
+    // var emptyFunc = null; //causes TypeError
+    var currentNode = tree['root'];
+    recurseNode(tree, currentNode, emptyFunc, callback, 0);
 }
