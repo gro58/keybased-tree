@@ -20,7 +20,11 @@
                 var dashes = Array(level + 1).join("--");
                 collect += dashes;
                 collect += currentNode.content;
-                collect += '&#13;&#10;'; //CRLF
+                if (currentNode.isLeaf()) {
+                // https://www.utf8icons.com/character/127811/leaf-fluttering-in-wind
+                collect += '&#127811;'
+                }
+                collect += '&#13;&#10;' //CRLF
                 // console.log(dashes, currentNode.content);
             };
             tree.fromRootToLeafs(logNodeWithDashes);
