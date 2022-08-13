@@ -70,6 +70,9 @@ var bridge = (function (exports) {
                 return undefined;
             }
         },
+        insertOver: function(key, newContent){
+            return insertNodeOver(this, key, newContent);
+        },
         /**
          * 
          * @param {function(level, currentNode)} callback - function applied to current node while traversing the tree
@@ -87,7 +90,9 @@ var bridge = (function (exports) {
         remove: function (key) {
             var node = removeNode(this, key);
             if (node === undefined) {
-                node = {content: 'nothing'};
+                node = {
+                    content: 'nothing'
+                };
             }
             return node;
         }
@@ -139,6 +144,40 @@ var bridge = (function (exports) {
             return newNode;
         } else {
             console.warn('unknown parent key: ', parentKey);
+            return undefined;
+        }
+    }
+
+    /**
+     * 
+     * @param {*} tree - tree to which node will be added
+     * @param {*} key - key of node where newNode will be inserted over
+     * @param {*} newContent - content of the new node
+     * @returns the new node
+     */
+    function insertNodeOver(tree, key, newContent) {
+        var node = tree[key];
+        if (!node) {
+            throw "node with key " + key + "doesn't exist";
+        }
+        var parent = tree[node.parentKey];
+        if (parent) {
+            var newKey = nonexistingRandomKey(tree, 3);
+            var newNode = {
+                key: newKey,
+                parentKey: node.parentKey,
+                children: [node.key],
+                content: newContent,
+                isLeaf: function () {
+                    return (this.children.length === 0);
+                }
+            };
+            var childIndex = parent.children.indexOf(node.key);
+            parent.children[childIndex] = newKey;
+            tree[newKey] = newNode;
+            return newNode;
+        } else {
+            console.warn('unknown parent key: ', node.parentKey);
             return undefined;
         }
     }
@@ -249,7 +288,7 @@ var bridge = (function (exports) {
         var e = tree.addNode(w.key, "content-E");
         tree.addNode(s.key, "content-T");
         tree.addNode(y.key, "content-A");
-        tree.addNode(y.key, "content-C");
+        var c = tree.addNode(y.key, "content-C");
         // removing nodes -testcase
         var removedNode;
         removedNode = tree.remove('dummy-key');
@@ -262,10 +301,13 @@ var bridge = (function (exports) {
         console.log('removed:', removedNode.content);
         removedNode = tree.remove(y.key);
         console.log('removed:', removedNode.content);
+        // insertOver - testcase
+        var k = tree.insertOver(c.key, 'Insert-K');
+        console.log('inserted:', k);
         return tree;
     }
 
-    var version = "0.0.49";
+    var version = "0.1.5";
 
     window.onload = function () {
         console.log('version (from package.json) ', version);

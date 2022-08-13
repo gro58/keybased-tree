@@ -13,6 +13,7 @@ import {
 import json from '@rollup/plugin-json';
 import replace from '@rollup/plugin-replace';
 import babel from '@rollup/plugin-babel';
+import {version} from './package.json';
 
 const production = process.env.PRODUCTION === "true";
 console.log('process.env.npm_package_version ');
@@ -45,6 +46,7 @@ function getCopyTargets(filename) {
 function resolveAfter4Seconds(x) {
 	return new Promise(resolve => {
 		setTimeout(() => {
+			// var ver = process.env.npm_package_version;
 			resolve(x);
 		}, 4000);
 	});
@@ -52,9 +54,10 @@ function resolveAfter4Seconds(x) {
 
 async function myTest() {
 	console.log('before await');
-	var y = await resolveAfter4Seconds('version=' + process.env.npm_package_version);
-	console.log(y);
-	// console.log(targets);
+	// eslint-disable-next-line no-unused-vars
+	var y = await resolveAfter4Seconds('dummy argument');
+	// console.log(y);
+	console.log('version =', version);
 }
 
 myTest();

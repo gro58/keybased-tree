@@ -30,5 +30,8 @@ export function demoTree() {
     console.log('removed:', removedNode.content);
     removedNode = tree.remove(y.key);
     console.log('removed:', removedNode.content);
+    // insertOver - testcase
+    var k = tree.insertOver(c.key, 'Insert-K');
+    console.log('inserted:', k);
     return tree;
 }

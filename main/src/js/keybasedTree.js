@@ -13,6 +13,9 @@ var tree = {
             return undefined;
         }
     },
+    insertOver: function(key, newContent){
+        return insertNodeOver(this, key, newContent);
+    },
     /**
      * 
      * @param {function(level, currentNode)} callback - function applied to current node while traversing the tree
@@ -30,7 +33,9 @@ var tree = {
     remove: function (key) {
         var node = removeNode(this, key);
         if (node === undefined) {
-            node = {content: 'nothing'};
+            node = {
+                content: 'nothing'
+            };
         }
         return node;
     }
@@ -82,6 +87,40 @@ function createNode(tree, parentKey, newContent) {
         return newNode;
     } else {
         console.warn('unknown parent key: ', parentKey);
+        return undefined;
+    }
+}
+
+/**
+ * 
+ * @param {*} tree - tree to which node will be added
+ * @param {*} key - key of node where newNode will be inserted over
+ * @param {*} newContent - content of the new node
+ * @returns the new node
+ */
+function insertNodeOver(tree, key, newContent) {
+    var node = tree[key];
+    if (!node) {
+        throw "node with key " + key + "doesn't exist";
+    }
+    var parent = tree[node.parentKey];
+    if (parent) {
+        var newKey = nonexistingRandomKey(tree, 3);
+        var newNode = {
+            key: newKey,
+            parentKey: node.parentKey,
+            children: [node.key],
+            content: newContent,
+            isLeaf: function () {
+                return (this.children.length === 0);
+            }
+        };
+        var childIndex = parent.children.indexOf(node.key);
+        parent.children[childIndex] = newKey;
+        tree[newKey] = newNode;
+        return newNode;
+    } else {
+        console.warn('unknown parent key: ', node.parentKey);
         return undefined;
     }
 }

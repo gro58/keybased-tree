@@ -2,3 +2,7 @@ div span#icons8{
     font-size: smaller;
     font-style: italic;
 }
+p#out{
+    font-family: 'Console', Courier, monospace;
+    font-size: smaller;
+}
