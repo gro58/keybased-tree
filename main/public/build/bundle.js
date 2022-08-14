@@ -41,10 +41,21 @@ var bridge = (function (exports) {
      * @param {*} callback - function callbackEntering(level, currentNode)
      * called when entering current node
      */
-    function traverseRootToLeafs(tree, callback) {
+     function traverseRootToLeafs(tree, callback) {
         var emptyFunc = function () {};
         var currentNode = tree['root'];
         recurseNode(tree, currentNode, callback, emptyFunc, 0);
+    }
+
+    /**
+     * 
+     * @param {*} tree -  keybased tree object
+     * @param {*} callback - function callbackEntering(level, currentNode)
+     * called when entering current node
+     */
+     function traverseRootToLeafs_EnterLeave(tree, callbackEnter, callbackLeave) {
+        var currentNode = tree['root'];
+        recurseNode(tree, currentNode, callbackEnter, callbackLeave, 0);
     }
 
     /**
@@ -70,15 +81,18 @@ var bridge = (function (exports) {
                 return undefined;
             }
         },
-        insertOver: function(key, newContent){
+        insertOver: function (key, newContent) {
             return insertNodeOver(this, key, newContent);
         },
         /**
          * 
          * @param {function(level, currentNode)} callback - function applied to current node while traversing the tree
          */
-        fromRootToLeafs: function (callback) {
+         fromRootToLeafs: function (callback) {
             traverseRootToLeafs(this, callback);
+        },
+        fromRootToLeafs_EnterLeave: function (callbackEnter, callbackLeave) {
+            traverseRootToLeafs_EnterLeave(this, callbackEnter, callbackLeave);
         },
         /**
          * 
@@ -121,7 +135,11 @@ var bridge = (function (exports) {
 
     function createTreeFromJson(jsonTree) {
         // enhance jsonTree with methods of tree
-        return {...jsonTree, ...tree};
+        // https://medium.com/swlh/ellipses-three-dots-or-three-periods-in-javascript-a-primer-to-the-spread-operator-4993984591f5
+        return {
+            ...jsonTree,
+            ...tree
+        };
     }
 
 
@@ -316,7 +334,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.7";
+    var version = "0.1.8";
 
     window.onload = function () {
         console.log('version (from package.json) ', version);

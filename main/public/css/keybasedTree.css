@@ -1,8 +1,51 @@
-div.see_also{
+div.see_also {
     font-size: smaller;
     font-style: italic;
 }
-p#out{
+
+p#out {
     font-family: 'Console', Courier, monospace;
     font-size: smaller;
+}
+
+/* https://www.w3schools.com/howto/howto_js_treeview.asp */
+/* Remove default bullets */
+div#treeview ul {
+    list-style-type: none;
+}
+
+/* Remove margins and padding from the parent ul */
+div#treeview #parentUL {
+    margin: 0;
+    padding: 0;
+}
+
+/* Style the caret/arrow */
+div#treeview .caret {
+    cursor: pointer;
+    user-select: none;
+    /* Prevent text selection */
+}
+
+/* Create the caret/arrow with a unicode, and style it */
+div#treeview .caret::before {
+    content: "\25B6";
+    color: black;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+/* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+div#treeview .caret-down::before {
+    transform: rotate(90deg);
+}
+
+/* Hide the nested list */
+div#treeview .nested {
+    display: none;
+}
+
+/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+div#treeview .active {
+    display: block;
 }

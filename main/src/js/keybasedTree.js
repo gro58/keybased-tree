@@ -1,6 +1,7 @@
 import {
     traverseRootToLeafs,
-    traverseLeafsToRoot
+    traverseLeafsToRoot,
+    traverseRootToLeafs_EnterLeave
 } from './traverseTree.js';
 
 // variable tree has to be definde outside of createTree to have access to createNode
@@ -13,15 +14,18 @@ var tree = {
             return undefined;
         }
     },
-    insertOver: function(key, newContent){
+    insertOver: function (key, newContent) {
         return insertNodeOver(this, key, newContent);
     },
     /**
      * 
      * @param {function(level, currentNode)} callback - function applied to current node while traversing the tree
      */
-    fromRootToLeafs: function (callback) {
+     fromRootToLeafs: function (callback) {
         traverseRootToLeafs(this, callback);
+    },
+    fromRootToLeafs_EnterLeave: function (callbackEnter, callbackLeave) {
+        traverseRootToLeafs_EnterLeave(this, callbackEnter, callbackLeave);
     },
     /**
      * 
@@ -64,7 +68,11 @@ export function createTree(rootcontent) {
 
 export function createTreeFromJson(jsonTree) {
     // enhance jsonTree with methods of tree
-    return {...jsonTree, ...tree};
+    // https://medium.com/swlh/ellipses-three-dots-or-three-periods-in-javascript-a-primer-to-the-spread-operator-4993984591f5
+    return {
+        ...jsonTree,
+        ...tree
+    };
 }
 
 

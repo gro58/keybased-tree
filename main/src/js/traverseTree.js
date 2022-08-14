@@ -29,10 +29,21 @@ function recurseNode(tree, currentNode, callbackEntering, callbackLeaving, level
  * @param {*} callback - function callbackEntering(level, currentNode)
  * called when entering current node
  */
-export function traverseRootToLeafs(tree, callback) {
+ export function traverseRootToLeafs(tree, callback) {
     var emptyFunc = function () {};
     var currentNode = tree['root'];
     recurseNode(tree, currentNode, callback, emptyFunc, 0);
+}
+
+/**
+ * 
+ * @param {*} tree -  keybased tree object
+ * @param {*} callback - function callbackEntering(level, currentNode)
+ * called when entering current node
+ */
+ export function traverseRootToLeafs_EnterLeave(tree, callbackEnter, callbackLeave) {
+    var currentNode = tree['root'];
+    recurseNode(tree, currentNode, callbackEnter, callbackLeave, 0);
 }
 
 /**

@@ -84,24 +84,50 @@
             console.log("DOM is loaded");
             // console.log(tree);
             var collect = '';
-            var logNodeWithDashes = function (level, currentNode) {
-                var dashes = Array(level + 1).join("--");
-                collect += dashes;
-                collect += currentNode.content;
+            var logNodeToUL_Enter = function (level, currentNode) {
+                var space = Array(level + 1).join("  ");
                 if (currentNode.children.length === 0) {
-                    // https://www.utf8icons.com/character/127811/leaf-fluttering-in-wind
-                    collect += '&#127811;'
+                    collect += space;
+                    collect += "<li>";
+                    collect += currentNode.content;
+                } else {
+                    collect += space;
+                    collect += '<li><span class="caret">';
+                    collect += currentNode.content;
+                    collect += "</span>&#13;&#10;";
+                    collect += space;
+                    collect += '<ul class="nested">&#13;&#10;';
                 }
-                collect += '&#13;&#10;' //CRLF
-                // console.log(dashes, currentNode.content);
             };
-            tree.fromRootToLeafs(logNodeWithDashes);
-            collect += '---------------------------------&#13;&#10;'
-            tree.fromLeafsToRoot(logNodeWithDashes);
-            // console.log(collect);
-            // document.querySelector('#outarea').innerHTML = collect;
+            var logNodeToUL_Leave = function (level, currentNode) {
+                var space = Array(level + 1).join("  ");
+                if (currentNode.children.length === 0) {
+                    collect += "</li>&#13;&#10;";
+                } else {
+                    collect += space;
+                    collect += '</ul>&#13;&#10;';
+                    collect += space;
+                    collect += '</li>&#13;&#10;';
+                }
+            };
+            tree.fromRootToLeafs_EnterLeave(logNodeToUL_Enter, logNodeToUL_Leave);
+            // collect += '---------------------------------&#13;&#10;'
+            console.log(collect);
+            document.querySelector('#outarea').innerHTML = collect;
+            document.querySelector('#parentUL').innerHTML = collect;
             document.querySelector('#versioninfo').innerHTML = bridge.version;
             document.querySelector('#out').textContent = JSON.stringify(tree);
+
+            // code for treeview
+            var toggler = document.getElementsByClassName("caret");
+            // console.log(toggler, toggler.length);
+            for (var i = 0; i < toggler.length; i++) {
+                toggler[i].addEventListener("click", function (ev) {
+                    console.log('clicked:', ev);
+                    this.parentElement.querySelector(".nested").classList.toggle("active");
+                    this.classList.toggle("caret-down");
+                });
+            }
         });
     </script>
     <!-- <script type='module' src='build/translate.js'></script>       -->
@@ -116,10 +142,38 @@
     <!-- <h2>livereload active</h2> -->
     <p>Version: <span id="versioninfo">version</span></p>
     <p id="out"> </p>
-    <!-- <textarea id="outarea" cols='60' rows='30'>This is line one.&#13;&#10;This is line two.</textarea> -->
+    <textarea id="outarea" cols='60' rows='30'>This is line one.&#13;&#10;This is line two.</textarea>
     <hr>
-    <div class="see_also"><a href="https://www.w3schools.com/howto/howto_js_treeview.asp">Tree View</a> by w3schools.com</div>
-    <div class="see_also"><span id="icons8"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
+    <!-- https://www.w3schools.com/howto/howto_js_treeview.asp -->
+    <div id="treeview">
+        <ul id="parentUL">
+            <li><span class="caret">Beverages</span>
+                <ul class="nested">
+                    <li>Water</li>
+                    <li>Coffee</li>
+                    <li><span class="caret">Tea</span>
+                        <ul class="nested">
+                            <li>Black Tea</li>
+                            <li>White Tea</li>
+                            <li><span class="caret">Green Tea</span>
+                                <ul class="nested">
+                                    <li>Sencha</li>
+                                    <li>Gyokuro</li>
+                                    <li>Matcha</li>
+                                    <li>Pi Lo Chun</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <hr>
+    <div class="see_also"><a href="https://www.w3schools.com/howto/howto_js_treeview.asp">Tree View</a> by w3schools.com
+    </div>
+    <div class="see_also"><span id="icons8"><a target="_blank"
+                href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
                 class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a
                 target="_blank" href="https://icons8.com"
                 class="fdm__copy-html-content fdm__copy-html-content-link">Icons8</a></span></div>
