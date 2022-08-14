@@ -54,13 +54,20 @@ export function createTree(rootcontent) {
         parentKey: null,
         children: [],
         content: rootcontent,
-        isLeaf: function () {
-            return (this.children.length === 0);
-        }
+        // isLeaf: function () {
+        //     return (this.children.length === 0);
+        // }
     }
     newTree['root'] = rootNode;
     return newTree;
 }
+
+export function createTreeFromJson(jsonTree) {
+    // enhance jsonTree with methods of tree
+    return {...jsonTree, ...tree};
+}
+
+
 
 /**
  * 
@@ -78,9 +85,9 @@ function createNode(tree, parentKey, newContent) {
             parentKey: parentKey,
             children: [],
             content: newContent,
-            isLeaf: function () {
-                return (this.children.length === 0);
-            }
+            // isLeaf: function () {
+            //     return (this.children.length === 0);
+            // }
         };
         tree[newKey] = newNode;
         parent.children = [...(parent.children || []), newNode.key]
@@ -111,9 +118,9 @@ function insertNodeOver(tree, key, newContent) {
             parentKey: node.parentKey,
             children: [node.key],
             content: newContent,
-            isLeaf: function () {
-                return (this.children.length === 0);
-            }
+            // isLeaf: function () {
+            //     return (this.children.length === 0);
+            // }
         };
         var childIndex = parent.children.indexOf(node.key);
         parent.children[childIndex] = newKey;

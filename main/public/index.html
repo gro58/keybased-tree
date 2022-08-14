@@ -19,7 +19,7 @@
                 var dashes = Array(level + 1).join("--");
                 collect += dashes;
                 collect += currentNode.content;
-                if (currentNode.isLeaf()) {
+                if (currentNode.children.length === 0) {
                 // https://www.utf8icons.com/character/127811/leaf-fluttering-in-wind
                 collect += '&#127811;'
                 }
@@ -49,10 +49,10 @@
     <p id="out"> </p>
     <textarea id="outarea" cols='60' rows='30'>This is line one.&#13;&#10;This is line two.</textarea>
     <hr>
-    <div><span id="icons8"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
+    <div class="see_also"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
                 class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a
                 target="_blank" href="https://icons8.com"
-                class="fdm__copy-html-content fdm__copy-html-content-link">Icons8</a></span></div>
+                class="fdm__copy-html-content fdm__copy-html-content-link">Icons8</a></div>
 </body>
 
 </html>

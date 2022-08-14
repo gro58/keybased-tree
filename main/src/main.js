@@ -2,7 +2,7 @@
 // 
 
 import config from "./js/config.json";
-import {createTree} from './js/keybasedTree.js';
+import {createTree, createTreeFromJson} from './js/keybasedTree.js';
 import {demoTree} from './js/CreateDemoTree.js';
 import {version} from '../package.json';
 
@@ -11,6 +11,7 @@ import {version} from '../package.json';
 export {
     config,
     createTree,
+    createTreeFromJson,
     version,
     demoTree
 };

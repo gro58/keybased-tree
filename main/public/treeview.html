@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <title>keybased-tree with view</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='./css/keybasedTree.css'>
+    <script src='build/bundle.js'></script>
+    <script>
+        console.log('version (from package.json) ', bridge.version);
+        var tree_json = {
+            "root": {
+                "key": "root",
+                "parentKey": null,
+                "children": ["7zC", "53p"],
+                "content": "Demo Tree"
+            },
+            "7zC": {
+                "key": "7zC",
+                "parentKey": "root",
+                "children": ["tvz", "9CS", "Tz1"],
+                "content": "content-W"
+            },
+            "53p": {
+                "key": "53p",
+                "parentKey": "root",
+                "children": ["tb0", "DzC"],
+                "content": "content-Y"
+            },
+            "tvz": {
+                "key": "tvz",
+                "parentKey": "7zC",
+                "children": [],
+                "content": "content-R"
+            },
+            "9CS": {
+                "key": "9CS",
+                "parentKey": "7zC",
+                "children": ["Mz6"],
+                "content": "content-S"
+            },
+            "Tz1": {
+                "key": "Tz1",
+                "parentKey": "7zC",
+                "children": [],
+                "content": "content-E"
+            },
+            "rnh": {
+                "key": "rnh",
+                "parentKey": "9CS",
+                "children": [],
+                "content": "content-T"
+            },
+            "tb0": {
+                "key": "tb0",
+                "parentKey": "53p",
+                "children": [],
+                "content": "content-A"
+            },
+            "lJo": {
+                "key": "lJo",
+                "parentKey": "53p",
+                "children": [],
+                "content": "content-C"
+            },
+            "DzC": {
+                "key": "DzC",
+                "parentKey": "53p",
+                "children": ["lJo"],
+                "content": "Insert-K"
+            },
+            "Mz6": {
+                "key": "Mz6",
+                "parentKey": "9CS",
+                "children": ["rnh"],
+                "content": "Insert-B"
+            }
+        }
+        var tree = bridge.createTreeFromJson(tree_json);
+
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("DOM is loaded");
+            // console.log(tree);
+            var collect = '';
+            var logNodeWithDashes = function (level, currentNode) {
+                var dashes = Array(level + 1).join("--");
+                collect += dashes;
+                collect += currentNode.content;
+                if (currentNode.children.length === 0) {
+                    // https://www.utf8icons.com/character/127811/leaf-fluttering-in-wind
+                    collect += '&#127811;'
+                }
+                collect += '&#13;&#10;' //CRLF
+                // console.log(dashes, currentNode.content);
+            };
+            tree.fromRootToLeafs(logNodeWithDashes);
+            collect += '---------------------------------&#13;&#10;'
+            tree.fromLeafsToRoot(logNodeWithDashes);
+            // console.log(collect);
+            // document.querySelector('#outarea').innerHTML = collect;
+            document.querySelector('#versioninfo').innerHTML = bridge.version;
+            document.querySelector('#out').textContent = JSON.stringify(tree);
+        });
+    </script>
+    <!-- <script type='module' src='build/translate.js'></script>       -->
+</head>
+
+<body>
+    <nav>
+        <a href="./tests.html">Tests</a>
+        <a href="./license.html">License</a>
+    </nav>
+    <h1>keybased-tree with view</h1>
+    <!-- <h2>livereload active</h2> -->
+    <p>Version: <span id="versioninfo">version</span></p>
+    <p id="out"> </p>
+    <!-- <textarea id="outarea" cols='60' rows='30'>This is line one.&#13;&#10;This is line two.</textarea> -->
+    <hr>
+    <div class="see_also"><a href="https://www.w3schools.com/howto/howto_js_treeview.asp">Tree View</a> by w3schools.com</div>
+    <div class="see_also"><span id="icons8"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
+                class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a
+                target="_blank" href="https://icons8.com"
+                class="fdm__copy-html-content fdm__copy-html-content-link">Icons8</a></span></div>
+</body>
+
+</html>

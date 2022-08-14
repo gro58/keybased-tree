@@ -111,13 +111,20 @@ var bridge = (function (exports) {
             parentKey: null,
             children: [],
             content: rootcontent,
-            isLeaf: function () {
-                return (this.children.length === 0);
-            }
+            // isLeaf: function () {
+            //     return (this.children.length === 0);
+            // }
         };
         newTree['root'] = rootNode;
         return newTree;
     }
+
+    function createTreeFromJson(jsonTree) {
+        // enhance jsonTree with methods of tree
+        return {...jsonTree, ...tree};
+    }
+
+
 
     /**
      * 
@@ -135,9 +142,9 @@ var bridge = (function (exports) {
                 parentKey: parentKey,
                 children: [],
                 content: newContent,
-                isLeaf: function () {
-                    return (this.children.length === 0);
-                }
+                // isLeaf: function () {
+                //     return (this.children.length === 0);
+                // }
             };
             tree[newKey] = newNode;
             parent.children = [...(parent.children || []), newNode.key];
@@ -168,9 +175,9 @@ var bridge = (function (exports) {
                 parentKey: node.parentKey,
                 children: [node.key],
                 content: newContent,
-                isLeaf: function () {
-                    return (this.children.length === 0);
-                }
+                // isLeaf: function () {
+                //     return (this.children.length === 0);
+                // }
             };
             var childIndex = parent.children.indexOf(node.key);
             parent.children[childIndex] = newKey;
@@ -285,29 +292,31 @@ var bridge = (function (exports) {
         tree.addNode(w.key, "content-R");
         // var a1 = tree.addNode(w.key, "content-A"); //for demo: double content is allowed
         var s = tree.addNode(w.key, "content-S");
-        var e = tree.addNode(w.key, "content-E");
-        tree.addNode(s.key, "content-T");
+        tree.addNode(w.key, "content-E");
+        var t = tree.addNode(s.key, "content-T");
         tree.addNode(y.key, "content-A");
         var c = tree.addNode(y.key, "content-C");
         // removing nodes -testcase
-        var removedNode;
-        removedNode = tree.remove('dummy-key');
-        console.log('removed:', removedNode.content);
-        removedNode = tree.remove(s.key);
-        console.log('removed:', removedNode.content);
-        removedNode = tree.remove(e.key);
-        console.log('removed:', removedNode.content);
-        removedNode = tree.remove('root');
-        console.log('removed:', removedNode.content);
-        removedNode = tree.remove(y.key);
-        console.log('removed:', removedNode.content);
+        // var removedNode;
+        // removedNode = tree.remove('dummy-key');
+        // console.log('removed:', removedNode.content);
+        // removedNode = tree.remove(s.key);
+        // console.log('removed:', removedNode.content);
+        // removedNode = tree.remove(e.key);
+        // console.log('removed:', removedNode.content);
+        // removedNode = tree.remove('root');
+        // console.log('removed:', removedNode.content);
+        // removedNode = tree.remove(y.key);
+        // console.log('removed:', removedNode.content);
         // insertOver - testcase
         var k = tree.insertOver(c.key, 'Insert-K');
         console.log('inserted:', k);
+        var b = tree.insertOver(t.key, 'Insert-B');
+        console.log('inserted:', b);
         return tree;
     }
 
-    var version = "0.1.5";
+    var version = "0.1.7";
 
     window.onload = function () {
         console.log('version (from package.json) ', version);
@@ -321,6 +330,7 @@ var bridge = (function (exports) {
 
     exports.config = config;
     exports.createTree = createTree;
+    exports.createTreeFromJson = createTreeFromJson;
     exports.demoTree = demoTree;
     exports.mainIsLoaded = mainIsLoaded;
     exports.version = version;

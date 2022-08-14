@@ -19,19 +19,21 @@ export function demoTree() {
     var a2 = tree.addNode(y.key, "content-A");
     var c = tree.addNode(y.key, "content-C");
     // removing nodes -testcase
-    var removedNode;
-    removedNode = tree.remove('dummy-key');
-    console.log('removed:', removedNode.content);
-    removedNode = tree.remove(s.key);
-    console.log('removed:', removedNode.content);
-    removedNode = tree.remove(e.key);
-    console.log('removed:', removedNode.content);
-    removedNode = tree.remove('root');
-    console.log('removed:', removedNode.content);
-    removedNode = tree.remove(y.key);
-    console.log('removed:', removedNode.content);
+    // var removedNode;
+    // removedNode = tree.remove('dummy-key');
+    // console.log('removed:', removedNode.content);
+    // removedNode = tree.remove(s.key);
+    // console.log('removed:', removedNode.content);
+    // removedNode = tree.remove(e.key);
+    // console.log('removed:', removedNode.content);
+    // removedNode = tree.remove('root');
+    // console.log('removed:', removedNode.content);
+    // removedNode = tree.remove(y.key);
+    // console.log('removed:', removedNode.content);
     // insertOver - testcase
     var k = tree.insertOver(c.key, 'Insert-K');
     console.log('inserted:', k);
+    var b = tree.insertOver(t.key, 'Insert-B');
+    console.log('inserted:', b);
     return tree;
 }
