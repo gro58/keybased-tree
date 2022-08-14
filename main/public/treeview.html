@@ -83,90 +83,98 @@
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
             // console.log(tree);
-            var collect = '';
+
+            // create the unordered list for the tree view element
+            var u_list = '';
+            // define what to do when entering/leaving a node while traversing the tree
             var logNodeToUL_Enter = function (level, currentNode) {
                 var space = Array(level + 1).join("  ");
                 if (currentNode.children.length === 0) {
-                    collect += space;
-                    collect += "<li>";
-                    collect += currentNode.content;
+                    // leaf
+                    u_list += space;
+                    u_list += "<li>";
+                    u_list += currentNode.content;
                 } else {
-                    collect += space;
-                    collect += '<li><span class="caret">';
-                    collect += currentNode.content;
-                    collect += "</span>&#13;&#10;";
-                    collect += space;
-                    collect += '<ul class="nested">&#13;&#10;';
+                    //node with children
+                    u_list += space;
+                    u_list += '<li><span class="caret">';
+                    u_list += currentNode.content;
+                    u_list += "</span>&#13;&#10;";
+                    u_list += space;
+                    u_list += '<ul class="nested">&#13;&#10;';
                 }
             };
             var logNodeToUL_Leave = function (level, currentNode) {
                 var space = Array(level + 1).join("  ");
                 if (currentNode.children.length === 0) {
-                    collect += "</li>&#13;&#10;";
+                    u_list += "</li>&#13;&#10;";
                 } else {
-                    collect += space;
-                    collect += '</ul>&#13;&#10;';
-                    collect += space;
-                    collect += '</li>&#13;&#10;';
+                    u_list += space;
+                    u_list += '</ul>&#13;&#10;';
+                    u_list += space;
+                    u_list += '</li>&#13;&#10;';
                 }
             };
+            // traverse the tree visiting each node
             tree.fromRootToLeafs_EnterLeave(logNodeToUL_Enter, logNodeToUL_Leave);
-            // collect += '---------------------------------&#13;&#10;'
-            console.log(collect);
-            document.querySelector('#outarea').innerHTML = collect;
-            document.querySelector('#parentUL').innerHTML = collect;
+            // u_list += '---------------------------------&#13;&#10;'
+            // console.log(u_list);
+            // document.querySelector('#outarea').innerHTML = u_list;
+            document.querySelector('#parentUL').innerHTML = u_list;
             document.querySelector('#versioninfo').innerHTML = bridge.version;
             document.querySelector('#out').textContent = JSON.stringify(tree);
 
-            // code for treeview
+            // event listeners for treeview - make nodes expand/collapse on click
             var toggler = document.getElementsByClassName("caret");
             // console.log(toggler, toggler.length);
             for (var i = 0; i < toggler.length; i++) {
                 toggler[i].addEventListener("click", function (ev) {
-                    console.log('clicked:', ev);
+                    // console.log('clicked:', ev);
                     this.parentElement.querySelector(".nested").classList.toggle("active");
                     this.classList.toggle("caret-down");
                 });
             }
         });
+
+        function expandAll() {
+            var caretList = document.getElementsByClassName("caret");
+            // console.log(caretList, caretList.length);
+            for (var i = 0; i < caretList.length; i++) {
+                caretList[i].parentElement.querySelector(".nested").classList.add("active");
+                caretList[i].classList.add("caret-down");
+            }
+        }
+
+        function collapseAll() {
+            var caretList = document.getElementsByClassName("caret");
+            // console.log(caretList, caretList.length);
+            for (var i = 0; i < caretList.length; i++) {
+                caretList[i].parentElement.querySelector(".nested").classList.remove("active");
+                caretList[i].classList.remove("caret-down");
+            }
+        }
     </script>
     <!-- <script type='module' src='build/translate.js'></script>       -->
 </head>
 
 <body>
     <nav>
-        <a href="./tests.html">Tests</a>
+        <a href="./index.html">Home</a>
         <a href="./license.html">License</a>
     </nav>
     <h1>keybased-tree with view</h1>
     <!-- <h2>livereload active</h2> -->
     <p>Version: <span id="versioninfo">version</span></p>
     <p id="out"> </p>
-    <textarea id="outarea" cols='60' rows='30'>This is line one.&#13;&#10;This is line two.</textarea>
+    <!-- <textarea id="outarea" cols='60' rows='30'>This is line one.&#13;&#10;This is line two.</textarea> -->
     <hr>
+    <!-- https://www.w3schools.com/html/html_form_input_types.asp -->
+    <input type="button" onclick="expandAll()" value="Expand all">
+    <input type="button" onclick="collapseAll()" value="Collapse all">
     <!-- https://www.w3schools.com/howto/howto_js_treeview.asp -->
     <div id="treeview">
         <ul id="parentUL">
-            <li><span class="caret">Beverages</span>
-                <ul class="nested">
-                    <li>Water</li>
-                    <li>Coffee</li>
-                    <li><span class="caret">Tea</span>
-                        <ul class="nested">
-                            <li>Black Tea</li>
-                            <li>White Tea</li>
-                            <li><span class="caret">Green Tea</span>
-                                <ul class="nested">
-                                    <li>Sencha</li>
-                                    <li>Gyokuro</li>
-                                    <li>Matcha</li>
-                                    <li>Pi Lo Chun</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
+            <li>treeview dummy element</li>
         </ul>
     </div>
     <hr>

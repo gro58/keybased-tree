@@ -29,7 +29,9 @@ div#treeview .caret {
 
 /* Create the caret/arrow with a unicode, and style it */
 div#treeview .caret::before {
-    content: "\25B6";
+    /* content: "\25B6"; */
+    /* https://unicode-table.com/de/sets/arrow-symbols/#right-arrows */
+    content: "\27BD";
     color: black;
     display: inline-block;
     margin-right: 6px;
