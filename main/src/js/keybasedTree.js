@@ -17,6 +17,16 @@ var tree = {
     insertOver: function (key, newContent) {
         return insertNodeOver(this, key, newContent);
     },
+    remove: function (key) {
+        var node = removeNode(this, key);
+        if (node === undefined) {
+            node = {
+                content: 'nothing'
+            };
+        }
+        return node;
+    },
+
     /**
      * 
      * @param {function(level, currentNode)} callback - function applied to current node while traversing the tree
@@ -33,15 +43,6 @@ var tree = {
      */
     fromLeafsToRoot: function (callback) {
         traverseLeafsToRoot(this, callback);
-    },
-    remove: function (key) {
-        var node = removeNode(this, key);
-        if (node === undefined) {
-            node = {
-                content: 'nothing'
-            };
-        }
-        return node;
     }
 };
 

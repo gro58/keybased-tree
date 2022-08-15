@@ -53,6 +53,7 @@
 
         function addNode(ev) {
             var parentKey = document.getElementById('node_id').innerHTML;
+            // https://stackoverflow.com/questions/11563638/how-do-i-get-the-value-of-text-input-field-using-javascript
             var newContent = document.getElementById('ContentInputId').value;
             console.log('add', newContent, 'to node with key', parentKey);
             tree.addNode(parentKey, newContent);
@@ -60,10 +61,17 @@
         };
 
         function insertOver(ev) {
-            var parentKey = document.getElementById('node_id').innerHTML;
+            var key = document.getElementById('node_id').innerHTML;
             var newContent = document.getElementById('ContentInputId').value;
-            console.log('add', newContent, 'to node with key', parentKey);
-            tree.insertOver(parentKey, newContent);
+            console.log('insert', newContent, 'over node with key', key);
+            tree.insertOver(key, newContent);
+            refreshTreeView();
+        }
+
+        function removeNode(ev) {
+            var key = document.getElementById('node_id').innerHTML;
+            console.log('remove node with key', key);
+            tree.remove(key);
             refreshTreeView();
         }
     </script>
@@ -92,14 +100,15 @@
             <p><span id="node_content">???</span> key=<span id="node_id">undefined</span></p>
             <h3>Add node or insert node over...</h3>
             <!-- https://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_input_type_text -->
-            <label for="fname">New content: </label>
-            <input type="text" id="ContentInputId" name="ContentInputName">
+            <label for="ContentInputName">New content: </label>
+            <input type="text" size="40" id="ContentInputId" name="ContentInputName">
             <p>
-                <input type="button" onclick="addNode()" value="Add node">
+                <input type="button" onclick="addNode()" value="Add">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="button" onclick="insertOver()" value="Insert node over...">
+                <input type="button" onclick="insertOver()" value="Insert over...">
             </p>
             <h3>Remove node</h3>
+            <input type="button" onclick="removeNode()" value="Remove">
         </div>
     </div>
     <hr>
