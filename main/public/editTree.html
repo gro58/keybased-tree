@@ -15,17 +15,6 @@
             console.log("DOM is loaded");
             document.querySelector('#versioninfo').innerHTML = bridge.version;
             refreshTreeView();
-            // event listeners for treeview - make nodes expand/collapse on click
-            var nodeList = document.getElementsByClassName("node");
-            // console.log(nodeList, nodeList.length);
-            for (var i = 0; i < nodeList.length; i++) {
-                nodeList[i].addEventListener("click", function (ev) {
-                    var nodeId = ev.target.id;
-                    var nodeContent = tree[nodeId].content;
-                    document.querySelector('#node_id').innerHTML = nodeId;
-                    document.querySelector('#node_content').innerHTML = nodeContent;
-                });
-            }
         });
 
         function refreshTreeView() {
@@ -48,14 +37,34 @@
             // tree.fromLeafsToRoot(logNodeWithDashes);
             // console.log(collect);
             document.querySelector('#outarea').innerHTML = collect;
+
+            // event listeners for updating 'selected node' data if node clicked
+            var nodeList = document.getElementsByClassName("node");
+            // console.log(nodeList, nodeList.length);
+            for (var i = 0; i < nodeList.length; i++) {
+                nodeList[i].addEventListener("click", function (ev) {
+                    var nodeId = ev.target.id;
+                    var nodeContent = tree[nodeId].content;
+                    document.querySelector('#node_id').innerHTML = nodeId;
+                    document.querySelector('#node_content').innerHTML = nodeContent;
+                });
+            }
         }; //end of refreshTreeView()
 
         function addNode(ev) {
-            console.log('add');
+            var parentKey = document.getElementById('node_id').innerHTML;
+            var newContent = document.getElementById('ContentInputId').value;
+            console.log('add', newContent, 'to node with key', parentKey);
+            tree.addNode(parentKey, newContent);
+            refreshTreeView();
         };
 
         function insertOver(ev) {
-            console.log('insert');
+            var parentKey = document.getElementById('node_id').innerHTML;
+            var newContent = document.getElementById('ContentInputId').value;
+            console.log('add', newContent, 'to node with key', parentKey);
+            tree.insertOver(parentKey, newContent);
+            refreshTreeView();
         }
     </script>
     <!-- <script type='module' src='build/translate.js'></script>       -->
@@ -80,7 +89,7 @@
         </div>
         <div class="column">
             <h3>selected node</h3>
-            <p><span id="node_content">content</span> key=<span id="node_id">key</span></p>
+            <p><span id="node_content">???</span> key=<span id="node_id">undefined</span></p>
             <h3>Add node or insert node over...</h3>
             <!-- https://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_input_type_text -->
             <label for="fname">New content: </label>
