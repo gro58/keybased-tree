@@ -1,45 +1,67 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset='utf-8'>
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-    <title>keybased-tree</title>
+    <title>keybased tree - edit</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='./css/keybasedTree.css'>
-    <link rel="icon" href ="./favicon.ico">
+    <link rel="icon" href="./favicon.ico">
     <script src='build/bundle.js'></script>
     <script>
-        // console.log('bridge', bridge);
-        console.log('version (from package.json) ', bridge.version);
         var tree = bridge.demoTree('Demo Tree Root Content');
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
+            document.querySelector('#versioninfo').innerHTML = bridge.version;
+            refreshTreeView();
+            // event listeners for treeview - make nodes expand/collapse on click
+            var nodeList = document.getElementsByClassName("node");
+            // console.log(nodeList, nodeList.length);
+            for (var i = 0; i < nodeList.length; i++) {
+                nodeList[i].addEventListener("click", function (ev) {
+                    var nodeId = ev.target.id;
+                    var nodeContent = tree[nodeId].content;
+                    document.querySelector('#node_id').innerHTML = nodeId;
+                    document.querySelector('#node_content').innerHTML = nodeContent;
+                });
+            }
+        });
+
+        function refreshTreeView() {
+            document.querySelector('#out').textContent = JSON.stringify(tree);
             // console.log(tree);
             var collect = '';
             var logNodeWithDashes = function (level, currentNode) {
                 var dashes = Array(level + 1).join("--");
-                collect += dashes;
+                collect += '<li>' + dashes + '<span id="' + currentNode.key + '" class="node">';
                 collect += currentNode.content;
                 if (currentNode.children.length === 0) {
-                // https://www.utf8icons.com/character/127811/leaf-fluttering-in-wind
-                collect += '&#127811;'
+                    // https://www.utf8icons.com/character/127811/leaf-fluttering-in-wind
+                    collect += '&#127811;'
                 }
-                collect += '&#13;&#10;' //CRLF
+                collect += '</li></span>&#13;&#10;' //CRLF
                 // console.log(dashes, currentNode.content);
             };
             tree.fromRootToLeafs(logNodeWithDashes);
-            collect += '---------------------------------&#13;&#10;'
-            tree.fromLeafsToRoot(logNodeWithDashes);
+            // collect += '---------------------------------&#13;&#10;'
+            // tree.fromLeafsToRoot(logNodeWithDashes);
             // console.log(collect);
             document.querySelector('#outarea').innerHTML = collect;
-            document.querySelector('#versioninfo').innerHTML = bridge.version;
-            document.querySelector('#out').textContent = JSON.stringify(tree);
-        });
+        }; //end of refreshTreeView()
+
+        function addNode(ev) {
+            console.log('add');
+        };
+
+        function insertOver(ev) {
+            console.log('insert');
+        }
     </script>
     <!-- <script type='module' src='build/translate.js'></script>       -->
 </head>
 
-<body>
+<body class="keybased-tree">
     <nav>
         <a href="./index.html">Home</a>
         <a class="selected">Edit Tree</a>
@@ -47,15 +69,35 @@
         <a href="./license.html">License</a>
     </nav>
     <h1>keybased-tree</h1>
-    <!-- <h2>livereload active</h2> -->
+    <h2>Edit Tree</h2>
+    <h3>addNode, insertOver, remove a leaf or a node with exactly one child</h3>
     <p>Version: <span id="versioninfo">version</span></p>
     <p id="out"> </p>
-    <textarea id="outarea" cols='60' rows='30'>This is line one.&#13;&#10;This is line two.</textarea>
+    <!-- https://www.w3schools.com/howto/howto_css_two_columns.asp -->
+    <div class="row">
+        <div class="column">
+            <ul id="outarea" cols='60' rows='30'>This is line one.&#13;&#10;This is line two.</ul>
+        </div>
+        <div class="column">
+            <h3>selected node</h3>
+            <p><span id="node_content">content</span> key=<span id="node_id">key</span></p>
+            <h3>Add node or insert node over...</h3>
+            <!-- https://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_input_type_text -->
+            <label for="fname">New content: </label>
+            <input type="text" id="ContentInputId" name="ContentInputName">
+            <p>
+                <input type="button" onclick="addNode()" value="Add node">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="button" onclick="insertOver()" value="Insert node over...">
+            </p>
+            <h3>Remove node</h3>
+        </div>
+    </div>
     <hr>
     <div class="see_also"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
-                class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a
-                target="_blank" href="https://icons8.com"
-                class="fdm__copy-html-content fdm__copy-html-content-link">Icons8</a></div>
+            class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a
+            target="_blank" href="https://icons8.com"
+            class="fdm__copy-html-content fdm__copy-html-content-link">Icons8</a></div>
 </body>
 
 </html>

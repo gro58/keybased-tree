@@ -3,7 +3,7 @@
 <head>
     <meta charset='utf-8'>
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-    <title>keybased-tree</title>
+    <title>keybased-tree - create</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='./css/keybasedTree.css'>
     <link rel="icon" href ="./favicon.ico">
@@ -28,10 +28,12 @@
                 // console.log(dashes, currentNode.content);
             };
             tree.fromRootToLeafs(logNodeWithDashes);
-            collect += '---------------------------------&#13;&#10;'
+            document.querySelector('#outarea_root2leafs').innerHTML = collect;
+            // collect += '---------------------------------&#13;&#10;'
+            collect = '';
             tree.fromLeafsToRoot(logNodeWithDashes);
+            document.querySelector('#outarea_leafs2root').innerHTML = collect;
             // console.log(collect);
-            document.querySelector('#outarea').innerHTML = collect;
             document.querySelector('#versioninfo').innerHTML = bridge.version;
             document.querySelector('#out').textContent = JSON.stringify(tree);
         });
@@ -39,7 +41,7 @@
     <!-- <script type='module' src='build/translate.js'></script>       -->
 </head>
 
-<body>
+<body class="keybased-tree">
     <nav>
         <a class="selected">Home</a>
         <a href="./editTree.html">Edit Tree</a>
@@ -47,10 +49,15 @@
         <a href="./license.html">License</a>
     </nav>
     <h1>keybased-tree</h1>
+    <h2>Create Tree</h2>
     <!-- <h2>livereload active</h2> -->
     <p>Version: <span id="versioninfo">version</span></p>
+    <h3>JSON file created by function demoTree() defined in <a href="../src/js/createDemoTree.js">createDemoTree.js</a></h3>
     <p id="out"> </p>
-    <textarea id="outarea" cols='60' rows='30'>This is line one.&#13;&#10;This is line two.</textarea>
+    <h3>view of tree using tree.fromRootToLeafs</h3>
+    <textarea id="outarea_root2leafs" cols='60' rows='15'>This is line one.&#13;&#10;This is line two.</textarea>
+    <h3>view of tree using tree.fromLeafsToRoot</h3>
+    <textarea id="outarea_leafs2root" cols='60' rows='15'>This is line one.&#13;&#10;This is line two.</textarea>
     <hr>
     <div class="see_also"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
                 class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a

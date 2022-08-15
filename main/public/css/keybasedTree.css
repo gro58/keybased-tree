@@ -1,6 +1,36 @@
-nav a.selected{
-    background-color:rgb(249, 237, 217);
-    color:darkgreen;
+body.keybased-tree h3 {
+    background-color: beige;
+    font-weight: normal;
+}
+
+body.keybased-tree .column {
+    float: left;
+    width: 50%;
+}
+
+/* Remove default bullets */
+body.keybased-tree ul#outarea{
+    list-style-type: none;
+}
+
+/* show clickable */
+body.keybased-tree li span {
+    color: blue;
+    /* text-decoration: underline; */
+    cursor: pointer;
+}
+
+
+/* Clear floats after the columns */
+body.keybased-tree .row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+nav a.selected {
+    background-color: rgb(249, 237, 217);
+    color: darkgreen;
 }
 
 div.see_also {
