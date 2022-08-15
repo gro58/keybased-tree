@@ -10,8 +10,11 @@ var tree = {
         if (parentKey) {
             return createNode(this, parentKey, newContent);
         } else {
-            console.error('parentKey undefined or null');
-            return undefined;
+            var msg = 'parentKey undefined or null';
+            return {
+                result: msg,
+                node: undefined
+            };
         }
     },
     insertOver: function (key, newContent) {
@@ -31,7 +34,7 @@ var tree = {
      * 
      * @param {function(level, currentNode)} callback - function applied to current node while traversing the tree
      */
-     fromRootToLeafs: function (callback) {
+    fromRootToLeafs: function (callback) {
         traverseRootToLeafs(this, callback);
     },
     fromRootToLeafs_EnterLeave: function (callbackEnter, callbackLeave) {
@@ -99,11 +102,17 @@ function createNode(tree, parentKey, newContent) {
             // }
         };
         tree[newKey] = newNode;
-        parent.children = [...(parent.children || []), newNode.key]
-        return newNode;
+        parent.children = [...(parent.children || []), newNode.key];
+        return {
+            result: 'OK',
+            node: newNode
+        };
     } else {
-        console.warn('unknown parent key: ', parentKey);
-        return undefined;
+        var msg = 'unknown parent key: ' + parentKey;
+        return {
+            result: msg,
+            node: undefined
+        };
     }
 }
 
@@ -117,7 +126,11 @@ function createNode(tree, parentKey, newContent) {
 function insertNodeOver(tree, key, newContent) {
     var node = tree[key];
     if (!node) {
-        throw "node with key " + key + "doesn't exist";
+        var msg = "node with key " + key + "doesn't exist";
+        return {
+            result: msg,
+            node: undefined
+        };
     }
     var parent = tree[node.parentKey];
     if (parent) {
@@ -134,10 +147,16 @@ function insertNodeOver(tree, key, newContent) {
         var childIndex = parent.children.indexOf(node.key);
         parent.children[childIndex] = newKey;
         tree[newKey] = newNode;
-        return newNode;
+        return {
+            result: 'OK',
+            node: newNode
+        };
     } else {
-        console.warn('unknown parent key: ', node.parentKey);
-        return undefined;
+        msg = 'unknown parent key: ' + node.parentKey;
+        return {
+            result: msg,
+            node: undefined
+        };
     }
 }
 
@@ -146,7 +165,7 @@ function removeNode(tree, key) {
     if (node) {
         console.log(node.key, 'has children', node.children);
         // TODO necessary? if(node.children && node.children.length > 0){}
-        var parent, childIndex, node_clone;
+        var parent, childIndex, node_clone, msg;
         switch (node.children.length) {
             case 0:
                 // no children
@@ -157,38 +176,61 @@ function removeNode(tree, key) {
                     parent.children.splice(childIndex);
                     node_clone = JSON.parse(JSON.stringify(node));
                     delete tree[key];
-                    return node_clone;
+                    return {
+                        result: 'OK',
+                        node: node_clone
+                    };
                 } else {
-                    console.warn('root cannot be removed');
+                    msg = 'root cannot be removed';
+                    return {
+                        result: msg,
+                        node: undefined
+                    };
                 }
-                return node; //no break necessary
-            case 1:
-                // exactly one child
-                parent = tree[node.parentKey];
-                if (parent) {
-                    childIndex = parent.children.indexOf(key);
-                    var grandchildKey = node.children[0];
-                    var grandchild = tree[grandchildKey];
-                    // replace key of child with key of grandchild in array of children of parent
-                    parent.children[childIndex] = grandchildKey;
-                    // replace parentKey of grandchild with parentKey of node
-                    grandchild.parentKey = node.parentKey;
-                    node_clone = JSON.parse(JSON.stringify(node));
-                    delete tree[key];
-                    return node_clone; //no break necessary
-                } else {
-                    console.warn('root cannot be removed');
-                }
-                return node; //no break necessary
-            default:
-                // more than one child
-                console.warn('node with more than one child cannot be removed');
+                // return {
+                //     result: 'OK', node: node
+                // };
+                case 1:
+                    // exactly one child
+                    parent = tree[node.parentKey];
+                    if (parent) {
+                        childIndex = parent.children.indexOf(key);
+                        var grandchildKey = node.children[0];
+                        var grandchild = tree[grandchildKey];
+                        // replace key of child with key of grandchild in array of children of parent
+                        parent.children[childIndex] = grandchildKey;
+                        // replace parentKey of grandchild with parentKey of node
+                        grandchild.parentKey = node.parentKey;
+                        node_clone = JSON.parse(JSON.stringify(node));
+                        delete tree[key];
+                        return {
+                            result: 'OK',
+                            node: node_clone
+                        };
+                    } else {
+                        msg = 'root cannot be removed';
+                        return {
+                            result: msg,
+                            node: undefined
+                        };
+                    }
+                    // return node; //no break necessary
+                    default:
+                        // more than one child
+                        msg = 'node with more than one child cannot be removed';
+                        return {
+                            result: msg,
+                                node: undefined
+                        };
         }
         // console.log(tree);
 
     } else {
-        console.warn('node with key', key, 'does not exist');
-        return undefined;
+        msg = 'node with key' + key + ' does not exist';
+        return {
+            result: msg,
+            node: undefined
+        };
     }
 }
 

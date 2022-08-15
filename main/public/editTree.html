@@ -11,6 +11,7 @@
     <script src='build/bundle.js'></script>
     <script>
         var tree = bridge.demoTree('Demo Tree Root Content');
+        console.log(tree);
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
             document.querySelector('#versioninfo').innerHTML = bridge.version;
@@ -27,7 +28,10 @@
                 collect += currentNode.content;
                 if (currentNode.children.length === 0) {
                     // https://www.utf8icons.com/character/127811/leaf-fluttering-in-wind
-                    collect += '&#127811;'
+                    // collect += '&#127811;'
+                    // https://www.utf8-chartable.de/unicode-utf8-table.pl
+                    collect += ' \u2618'; //shamrock
+
                 }
                 collect += '</li></span>&#13;&#10;' //CRLF
                 // console.log(dashes, currentNode.content);
@@ -56,23 +60,38 @@
             // https://stackoverflow.com/questions/11563638/how-do-i-get-the-value-of-text-input-field-using-javascript
             var newContent = document.getElementById('ContentInputId').value;
             console.log('add', newContent, 'to node with key', parentKey);
-            tree.addNode(parentKey, newContent);
-            refreshTreeView();
+            var response = tree.addNode(parentKey, newContent);
+            console.log(response);
+            if (response.result === 'OK') {
+                refreshTreeView();
+            } else {
+                alert(response.result);
+            }
         };
 
         function insertOver(ev) {
             var key = document.getElementById('node_id').innerHTML;
             var newContent = document.getElementById('ContentInputId').value;
             console.log('insert', newContent, 'over node with key', key);
-            tree.insertOver(key, newContent);
-            refreshTreeView();
+            var response = tree.insertOver(key, newContent);
+            console.log(response);
+            if (response.result === 'OK') {
+                refreshTreeView();
+            } else {
+                alert(response.result);
+            }
         }
 
         function removeNode(ev) {
             var key = document.getElementById('node_id').innerHTML;
             console.log('remove node with key', key);
-            tree.remove(key);
-            refreshTreeView();
+            var response = tree.remove(key);
+            console.log(response);
+            if (response.result === 'OK') {
+                refreshTreeView();
+            } else {
+                alert(response.result);
+            }
         }
     </script>
     <!-- <script type='module' src='build/translate.js'></script>       -->
