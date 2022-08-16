@@ -10,24 +10,14 @@ var tree = {
         if (parentKey) {
             return createNode(this, parentKey, newContent);
         } else {
-            var msg = 'parentKey undefined or null';
-            return {
-                result: msg,
-                node: undefined
-            };
+            return 'parentKey undefined or null';
         }
     },
     insertOver: function (key, newContent) {
         return insertNodeOver(this, key, newContent);
     },
     remove: function (key) {
-        var node = removeNode(this, key);
-        if (node === undefined) {
-            node = {
-                content: 'nothing'
-            };
-        }
-        return node;
+        return removeNode(this, key);
     },
 
     /**
@@ -103,16 +93,9 @@ function createNode(tree, parentKey, newContent) {
         };
         tree[newKey] = newNode;
         parent.children = [...(parent.children || []), newNode.key];
-        return {
-            result: 'OK',
-            node: newNode
-        };
+        return newNode;
     } else {
-        var msg = 'unknown parent key: ' + parentKey;
-        return {
-            result: msg,
-            node: undefined
-        };
+        return 'unknown parent key: ' + parentKey;
     }
 }
 
@@ -126,11 +109,7 @@ function createNode(tree, parentKey, newContent) {
 function insertNodeOver(tree, key, newContent) {
     var node = tree[key];
     if (!node) {
-        var msg = "node with key " + key + "doesn't exist";
-        return {
-            result: msg,
-            node: undefined
-        };
+        return "node with key " + key + "doesn't exist";
     }
     var parent = tree[node.parentKey];
     if (parent) {
@@ -147,16 +126,9 @@ function insertNodeOver(tree, key, newContent) {
         var childIndex = parent.children.indexOf(node.key);
         parent.children[childIndex] = newKey;
         tree[newKey] = newNode;
-        return {
-            result: 'OK',
-            node: newNode
-        };
+        return newNode;
     } else {
-        msg = 'unknown parent key: ' + node.parentKey;
-        return {
-            result: msg,
-            node: undefined
-        };
+        return 'unknown parent key: ' + node.parentKey;
     }
 }
 
@@ -176,20 +148,10 @@ function removeNode(tree, key) {
                     parent.children.splice(childIndex);
                     node_clone = JSON.parse(JSON.stringify(node));
                     delete tree[key];
-                    return {
-                        result: 'OK',
-                        node: node_clone
-                    };
+                    return node_clone;
                 } else {
-                    msg = 'root cannot be removed';
-                    return {
-                        result: msg,
-                        node: undefined
-                    };
+                    return 'root cannot be removed';
                 }
-                // return {
-                //     result: 'OK', node: node
-                // };
                 case 1:
                     // exactly one child
                     parent = tree[node.parentKey];
@@ -203,34 +165,18 @@ function removeNode(tree, key) {
                         grandchild.parentKey = node.parentKey;
                         node_clone = JSON.parse(JSON.stringify(node));
                         delete tree[key];
-                        return {
-                            result: 'OK',
-                            node: node_clone
-                        };
+                        return node_clone;
                     } else {
-                        msg = 'root cannot be removed';
-                        return {
-                            result: msg,
-                            node: undefined
-                        };
+                        return 'root cannot be removed';
                     }
-                    // return node; //no break necessary
                     default:
                         // more than one child
-                        msg = 'node with more than one child cannot be removed';
-                        return {
-                            result: msg,
-                                node: undefined
-                        };
+                        return 'node with more than one child cannot be removed';
         }
         // console.log(tree);
 
     } else {
-        msg = 'node with key' + key + ' does not exist';
-        return {
-            result: msg,
-            node: undefined
-        };
+        return 'node with key' + key + ' does not exist';
     }
 }
 

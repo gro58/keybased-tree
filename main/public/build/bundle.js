@@ -77,24 +77,14 @@ var bridge = (function (exports) {
             if (parentKey) {
                 return createNode(this, parentKey, newContent);
             } else {
-                var msg = 'parentKey undefined or null';
-                return {
-                    result: msg,
-                    node: undefined
-                };
+                return 'parentKey undefined or null';
             }
         },
         insertOver: function (key, newContent) {
             return insertNodeOver(this, key, newContent);
         },
         remove: function (key) {
-            var node = removeNode(this, key);
-            if (node === undefined) {
-                node = {
-                    content: 'nothing'
-                };
-            }
-            return node;
+            return removeNode(this, key);
         },
 
         /**
@@ -170,16 +160,9 @@ var bridge = (function (exports) {
             };
             tree[newKey] = newNode;
             parent.children = [...(parent.children || []), newNode.key];
-            return {
-                result: 'OK',
-                node: newNode
-            };
+            return newNode;
         } else {
-            var msg = 'unknown parent key: ' + parentKey;
-            return {
-                result: msg,
-                node: undefined
-            };
+            return 'unknown parent key: ' + parentKey;
         }
     }
 
@@ -193,11 +176,7 @@ var bridge = (function (exports) {
     function insertNodeOver(tree, key, newContent) {
         var node = tree[key];
         if (!node) {
-            var msg = "node with key " + key + "doesn't exist";
-            return {
-                result: msg,
-                node: undefined
-            };
+            return "node with key " + key + "doesn't exist";
         }
         var parent = tree[node.parentKey];
         if (parent) {
@@ -214,16 +193,9 @@ var bridge = (function (exports) {
             var childIndex = parent.children.indexOf(node.key);
             parent.children[childIndex] = newKey;
             tree[newKey] = newNode;
-            return {
-                result: 'OK',
-                node: newNode
-            };
+            return newNode;
         } else {
-            msg = 'unknown parent key: ' + node.parentKey;
-            return {
-                result: msg,
-                node: undefined
-            };
+            return 'unknown parent key: ' + node.parentKey;
         }
     }
 
@@ -232,7 +204,7 @@ var bridge = (function (exports) {
         if (node) {
             console.log(node.key, 'has children', node.children);
             // TODO necessary? if(node.children && node.children.length > 0){}
-            var parent, childIndex, node_clone, msg;
+            var parent, childIndex, node_clone;
             switch (node.children.length) {
                 case 0:
                     // no children
@@ -243,20 +215,10 @@ var bridge = (function (exports) {
                         parent.children.splice(childIndex);
                         node_clone = JSON.parse(JSON.stringify(node));
                         delete tree[key];
-                        return {
-                            result: 'OK',
-                            node: node_clone
-                        };
+                        return node_clone;
                     } else {
-                        msg = 'root cannot be removed';
-                        return {
-                            result: msg,
-                            node: undefined
-                        };
+                        return 'root cannot be removed';
                     }
-                    // return {
-                    //     result: 'OK', node: node
-                    // };
                     case 1:
                         // exactly one child
                         parent = tree[node.parentKey];
@@ -270,34 +232,18 @@ var bridge = (function (exports) {
                             grandchild.parentKey = node.parentKey;
                             node_clone = JSON.parse(JSON.stringify(node));
                             delete tree[key];
-                            return {
-                                result: 'OK',
-                                node: node_clone
-                            };
+                            return node_clone;
                         } else {
-                            msg = 'root cannot be removed';
-                            return {
-                                result: msg,
-                                node: undefined
-                            };
+                            return 'root cannot be removed';
                         }
-                        // return node; //no break necessary
                         default:
                             // more than one child
-                            msg = 'node with more than one child cannot be removed';
-                            return {
-                                result: msg,
-                                    node: undefined
-                            };
+                            return 'node with more than one child cannot be removed';
             }
             // console.log(tree);
 
         } else {
-            msg = 'node with key' + key + ' does not exist';
-            return {
-                result: msg,
-                node: undefined
-            };
+            return 'node with key' + key + ' does not exist';
         }
     }
 
@@ -348,56 +294,56 @@ var bridge = (function (exports) {
      */
     function demoTree() {
         var tree = createTree('Demo Tree');
-        var w = tree.addNode("root", "content-W").node;
-        var y = tree.addNode("root", "content-Y").node;
-        tree.addNode(w.key, "content-R").node;
-        // var a1 = tree.addNode(w.key, "content-A").node; //for demo: double content is allowed
-        var s = tree.addNode(w.key, "content-S").node;
-        tree.addNode(w.key, "content-E").node;
-        var t = tree.addNode(s.key, "content-T").node;
-        tree.addNode(y.key, "content-A").node;
-        var c = tree.addNode(y.key, "content-C").node;
+        var w = tree.addNode("root", "content-W");
+        var y = tree.addNode("root", "content-Y");
+        tree.addNode(w.key, "content-R");
+        // var a1 = tree.addNode(w.key, "content-A"); //for demo: double content is allowed
+        var s = tree.addNode(w.key, "content-S");
+        tree.addNode(w.key, "content-E");
+        var t = tree.addNode(s.key, "content-T");
+        tree.addNode(y.key, "content-A");
+        var c = tree.addNode(y.key, "content-C");
         // removing nodes -testcase
-        // var response;
-        // response=tree.remove('dummy-key');
-        // if (response.result === 'OK') {
-        //     console.log('removed:', response.node.content);
+        // var removedNodeOrErrorMessage;
+        // removedNodeOrErrorMessage=tree.remove('dummy-key');
+        // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
+        //     console.log('removed:', removedNodeOrErrorMessage.content);
         // } else {
-        //     console.log('error:', response.result);
+        //     console.log('error:', removedNodeOrErrorMessage);
         // }
-        // response=tree.remove(s.key);
-        // if (response.result === 'OK') {
-        //     console.log('removed:', response.node.content);
+        // removedNodeOrErrorMessage=tree.remove(s.key);
+        // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
+        //     console.log('removed:', removedNodeOrErrorMessage.content);
         // } else {
-        //     console.log('error:', response.result);
+        //     console.log('error:', removedNodeOrErrorMessage);
         // }
-        // response=tree.remove(e.key);
-        // if (response.result === 'OK') {
-        //     console.log('removed:', response.node.content);
+        // removedNodeOrErrorMessage=tree.remove(e.key);
+        // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
+        //     console.log('removed:', removedNodeOrErrorMessage.content);
         // } else {
-        //     console.log('error:', response.result);
+        //     console.log('error:', removedNodeOrErrorMessage);
         // }
-        // response=tree.remove('root');
-        // if (response.result === 'OK') {
-        //     console.log('removed:', response.node.content);
+        // removedNodeOrErrorMessage=tree.remove('root');
+        // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
+        //     console.log('removed:', removedNodeOrErrorMessage.content);
         // } else {
-        //     console.log('error:', response.result);
+        //     console.log('error:', removedNodeOrErrorMessage);
         // }
-        // response=tree.remove(y.key);
-        // if (response.result === 'OK') {
-        //     console.log('removed:', response.node.content);
+        // removedNodeOrErrorMessage=tree.remove(y.key);
+        // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
+        //     console.log('removed:', removedNodeOrErrorMessage.content);
         // } else {
-        //     console.log('error:', response.result);
+        //     console.log('error:', removedNodeOrErrorMessage);
         // }
         // insertOver - testcase
-        var k = tree.insertOver(c.key, 'Insert-K').node;
+        var k = tree.insertOver(c.key, 'Insert-K');
         console.log('inserted:', k);
-        var b = tree.insertOver(t.key, 'Insert-B').node;
+        var b = tree.insertOver(t.key, 'Insert-B');
         console.log('inserted:', b);
         return tree;
     }
 
-    var version = "0.1.15";
+    var version = "0.1.16";
 
     window.onload = function () {
         console.log('version (from package.json) ', version);
