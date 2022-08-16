@@ -3,6 +3,15 @@ body.keybased-tree h3 {
     font-weight: normal;
 }
 
+body.keybased-tree p#errormessage{
+    display: none;
+}
+
+body.keybased-tree p#errormessage.active{
+    display:inherit;
+    color: red;
+}
+
 body.keybased-tree .column {
     float: left;
     width: 50%;

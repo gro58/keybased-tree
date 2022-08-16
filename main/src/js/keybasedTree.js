@@ -109,7 +109,7 @@ function createNode(tree, parentKey, newContent) {
 function insertNodeOver(tree, key, newContent) {
     var node = tree[key];
     if (!node) {
-        return "node with key " + key + "doesn't exist";
+        return 'node with key "' + key + '" does not exist';
     }
     var parent = tree[node.parentKey];
     if (parent) {
@@ -176,7 +176,7 @@ function removeNode(tree, key) {
         // console.log(tree);
 
     } else {
-        return 'node with key' + key + ' does not exist';
+        return 'node with key "' + key + '" does not exist';
     }
 }
 

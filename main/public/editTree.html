@@ -53,14 +53,15 @@
                     document.querySelector('#node_content').innerHTML = nodeContent;
                 });
             }
+            ErrorMessage(''); //causes display:none
         }; //end of refreshTreeView()
 
         function addNode(ev) {
             var parentKey = document.getElementById('node_id').innerHTML;
             // https://stackoverflow.com/questions/11563638/how-do-i-get-the-value-of-text-input-field-using-javascript
             var newContent = document.getElementById('ContentInputId').value;
-            if(newContent === ''){
-                newContent='&lt;empty&gt;';
+            if (newContent === '') {
+                newContent = '&lt;empty&gt;';
             }
             console.log('add', newContent, 'to node with key', parentKey);
             var response = tree.addNode(parentKey, newContent);
@@ -68,15 +69,15 @@
             if (typeof response.key !== 'undefined') {
                 refreshTreeView();
             } else {
-                alert(response);
+                ErrorMessage(response);
             }
         };
 
         function insertOver(ev) {
             var key = document.getElementById('node_id').innerHTML;
             var newContent = document.getElementById('ContentInputId').value;
-            if(newContent === ''){
-                newContent='&lt;empty&gt;';
+            if (newContent === '') {
+                newContent = '&lt;empty&gt;';
             }
             console.log('insert', newContent, 'over node with key', key);
             var response = tree.insertOver(key, newContent);
@@ -84,7 +85,7 @@
             if (typeof response.key !== 'undefined') {
                 refreshTreeView();
             } else {
-                alert(response);
+                ErrorMessage(response);
             }
         }
 
@@ -96,7 +97,18 @@
             if (typeof response.key !== 'undefined') {
                 refreshTreeView();
             } else {
-                alert(response);
+                ErrorMessage(response);
+            }
+        }
+
+        function ErrorMessage(message) {
+            var errorElement = document.getElementById('errormessage');
+            if (message.length > 0) {
+                errorElement.innerHTML = message;
+                // https://www.w3schools.com/howto/howto_js_add_class.asp
+                errorElement.classList.add("active");
+            } else {
+                errorElement.classList.remove("active");
             }
         }
     </script>
@@ -114,7 +126,8 @@
     <h2>Edit Tree</h2>
     <h3>addNode, insertOver, remove a leaf or a node with exactly one child</h3>
     <p>Version: <span id="versioninfo">version</span></p>
-    <h3>JSON file created by function demoTree() defined in <a href="../src/js/createDemoTree.js">createDemoTree.js</a></h3>
+    <h3>JSON file created by function demoTree() defined in <a href="../src/js/createDemoTree.js">createDemoTree.js</a>
+    </h3>
     <p id="out"> </p>
     <!-- https://www.w3schools.com/howto/howto_css_two_columns.asp -->
     <div class="row">
@@ -135,6 +148,8 @@
             </p>
             <h3>Remove node</h3>
             <input type="button" onclick="removeNode()" value="Remove">
+            <hr>
+            <p id="errormessage" class="active">dummy error</p>
         </div>
     </div>
     <hr>

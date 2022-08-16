@@ -176,7 +176,7 @@ var bridge = (function (exports) {
     function insertNodeOver(tree, key, newContent) {
         var node = tree[key];
         if (!node) {
-            return "node with key " + key + "doesn't exist";
+            return 'node with key "' + key + '" does not exist';
         }
         var parent = tree[node.parentKey];
         if (parent) {
@@ -243,7 +243,7 @@ var bridge = (function (exports) {
             // console.log(tree);
 
         } else {
-            return 'node with key' + key + ' does not exist';
+            return 'node with key "' + key + '" does not exist';
         }
     }
 
@@ -343,7 +343,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.16";
+    var version = "0.1.17";
 
     window.onload = function () {
         console.log('version (from package.json) ', version);
