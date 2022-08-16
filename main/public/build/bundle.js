@@ -191,6 +191,7 @@ var bridge = (function (exports) {
                 // }
             };
             var childIndex = parent.children.indexOf(node.key);
+            // TODO bug? better ad to childlist?
             parent.children[childIndex] = newKey;
             tree[newKey] = newNode;
             return newNode;
@@ -343,7 +344,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.17";
+    var version = "0.1.18";
 
     window.onload = function () {
         console.log('version (from package.json) ', version);

@@ -29,6 +29,11 @@ body.keybased-tree li span {
     cursor: pointer;
 }
 
+/* mark selected node */
+body.keybased-tree li span.selected {
+    border: red dotted 2px;
+    background-color: bisque;
+}
 
 /* Clear floats after the columns */
 body.keybased-tree .row:after {

@@ -51,10 +51,21 @@
                     var nodeContent = tree[nodeId].content;
                     document.querySelector('#node_id').innerHTML = nodeId;
                     document.querySelector('#node_content').innerHTML = nodeContent;
+                    markNodeAsSelected(ev.target);
                 });
             }
             ErrorMessage(''); //causes display:none
         }; //end of refreshTreeView()
+
+        function markNodeAsSelected(targetNode) {
+            var nodeList = document.getElementsByClassName("node");
+            // deselect all nodes
+            for (var i = 0; i < nodeList.length; i++) {
+                nodeList[i].classList.remove("selected");
+            };
+            // mark targetNode as selected
+            targetNode.classList.add("selected");
+        };
 
         function addNode(ev) {
             var parentKey = document.getElementById('node_id').innerHTML;

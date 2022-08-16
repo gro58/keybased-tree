@@ -124,6 +124,7 @@ function insertNodeOver(tree, key, newContent) {
             // }
         };
         var childIndex = parent.children.indexOf(node.key);
+        // TODO bug? better ad to childlist?
         parent.children[childIndex] = newKey;
         tree[newKey] = newNode;
         return newNode;
