@@ -14,7 +14,7 @@ var bridge = (function (exports) {
      * Code for traversing: 
      * https://code.tutsplus.com/articles/data-structures-with-javascript-tree--cms-23393 
      * 
-     * @param {*} tree - tree to be trafersed
+     * @param {*} tree - tree to be traversed
      * @param {*} currentNode - current node while recursing
      * @param {*} callbackEntering - callback function called before entering the current node
      * @param {*} callbackLeaving - callback function called after leaving the current node
@@ -40,6 +40,7 @@ var bridge = (function (exports) {
      * @param {*} tree -  keybased tree object
      * @param {*} callback - function callbackEntering(level, currentNode)
      * called when entering current node
+     * direction root to leafs ist used by displaying the tree in common manner
      */
      function traverseRootToLeafs(tree, callback) {
         var emptyFunc = function () {};
@@ -49,11 +50,13 @@ var bridge = (function (exports) {
 
     /**
      * 
-     * @param {*} tree -  keybased tree object
-     * @param {*} callback - function callbackEntering(level, currentNode)
+     * @param {*} tree  -  keybased tree object
+     * @param {*} callbackEnter   - function callbackEnter(level, currentNode)
      * called when entering current node
+     * @param {*} callbackLeave  - function callbackLeave(level, currentNode)
+     * called when leaving current node
      */
-     function traverseRootToLeafs_EnterLeave(tree, callbackEnter, callbackLeave) {
+    function traverseRootToLeafs_EnterLeave(tree, callbackEnter, callbackLeave) {
         var currentNode = tree['root'];
         recurseNode(tree, currentNode, callbackEnter, callbackLeave, 0);
     }
@@ -63,6 +66,7 @@ var bridge = (function (exports) {
      * @param {*} tree -  keybased tree object
      * @param {*} callback - function callbackLeaving(level, currentNode)
      * called when leaving current node
+     * direction "leafs to root" is used by evaluating an arithmetic tree
      */
      function traverseLeafsToRoot(tree, callback) {
         var emptyFunc = function () {};
@@ -103,6 +107,17 @@ var bridge = (function (exports) {
          */
         fromLeafsToRoot: function (callback) {
             traverseLeafsToRoot(this, callback);
+        },
+        /**
+         * 
+         * @param {function(level, currentNode)} callback - function applied to current node while traversing the tree
+         */
+        withAllLeafs: function (callback){
+            traverseRootToLeafs(this, function(level, currentNode){
+                if(currentNode.children.length === 0){
+                    callback(level, currentNode);
+                }
+            });
         }
     };
 
@@ -344,7 +359,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.18";
+    var version = "0.1.19";
 
     window.onload = function () {
         console.log('version (from package.json) ', version);

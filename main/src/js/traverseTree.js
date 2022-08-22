@@ -2,7 +2,7 @@
  * Code for traversing: 
  * https://code.tutsplus.com/articles/data-structures-with-javascript-tree--cms-23393 
  * 
- * @param {*} tree - tree to be trafersed
+ * @param {*} tree - tree to be traversed
  * @param {*} currentNode - current node while recursing
  * @param {*} callbackEntering - callback function called before entering the current node
  * @param {*} callbackLeaving - callback function called after leaving the current node
@@ -28,6 +28,7 @@ function recurseNode(tree, currentNode, callbackEntering, callbackLeaving, level
  * @param {*} tree -  keybased tree object
  * @param {*} callback - function callbackEntering(level, currentNode)
  * called when entering current node
+ * direction root to leafs ist used by displaying the tree in common manner
  */
  export function traverseRootToLeafs(tree, callback) {
     var emptyFunc = function () {};
@@ -37,11 +38,13 @@ function recurseNode(tree, currentNode, callbackEntering, callbackLeaving, level
 
 /**
  * 
- * @param {*} tree -  keybased tree object
- * @param {*} callback - function callbackEntering(level, currentNode)
+ * @param {*} tree  -  keybased tree object
+ * @param {*} callbackEnter   - function callbackEnter(level, currentNode)
  * called when entering current node
+ * @param {*} callbackLeave  - function callbackLeave(level, currentNode)
+ * called when leaving current node
  */
- export function traverseRootToLeafs_EnterLeave(tree, callbackEnter, callbackLeave) {
+export function traverseRootToLeafs_EnterLeave(tree, callbackEnter, callbackLeave) {
     var currentNode = tree['root'];
     recurseNode(tree, currentNode, callbackEnter, callbackLeave, 0);
 }
@@ -51,6 +54,7 @@ function recurseNode(tree, currentNode, callbackEntering, callbackLeaving, level
  * @param {*} tree -  keybased tree object
  * @param {*} callback - function callbackLeaving(level, currentNode)
  * called when leaving current node
+ * direction "leafs to root" is used by evaluating an arithmetic tree
  */
  export function traverseLeafsToRoot(tree, callback) {
     var emptyFunc = function () {};

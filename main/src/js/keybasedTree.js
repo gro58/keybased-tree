@@ -36,6 +36,17 @@ var tree = {
      */
     fromLeafsToRoot: function (callback) {
         traverseLeafsToRoot(this, callback);
+    },
+    /**
+     * 
+     * @param {function(level, currentNode)} callback - function applied to current node while traversing the tree
+     */
+    withAllLeafs: function (callback){
+        traverseRootToLeafs(this, function(level, currentNode){
+            if(currentNode.children.length === 0){
+                callback(level, currentNode);
+            }
+        })
     }
 };
 
@@ -138,7 +149,7 @@ function removeNode(tree, key) {
     if (node) {
         console.log(node.key, 'has children', node.children);
         // TODO necessary? if(node.children && node.children.length > 0){}
-        var parent, childIndex, node_clone, msg;
+        var parent, childIndex, node_clone;
         switch (node.children.length) {
             case 0:
                 // no children

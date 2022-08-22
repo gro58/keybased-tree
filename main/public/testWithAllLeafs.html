@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-    <title>keybased-tree - view</title>
+    <title>keybased-tree - withAllLeafs</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='./css/keybasedTree.css'>
     <script src='build/bundle.js'></script>
@@ -80,10 +80,7 @@
         }
         var tree = bridge.createTreeFromJson(tree_json);
 
-        document.addEventListener("DOMContentLoaded", function () {
-            console.log("DOM is loaded");
-            // console.log(tree);
-
+        function createUnorderedList() {
             // create the unordered list for the tree view element
             var u_list = '';
             // define what to do when entering/leaving a node while traversing the tree
@@ -117,9 +114,13 @@
             };
             // traverse the tree visiting each node
             tree.fromRootToLeafs_EnterLeave(logNodeToUL_Enter, logNodeToUL_Leave);
-            // u_list += '---------------------------------&#13;&#10;'
-            // console.log(u_list);
-            // document.querySelector('#outarea').innerHTML = u_list;
+            return u_list;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("DOM is loaded");
+            // console.log(tree);
+            var u_list = createUnorderedList();
             document.querySelector('#parentUL').innerHTML = u_list;
             document.querySelector('#versioninfo').innerHTML = bridge.version;
             document.querySelector('#out').textContent = JSON.stringify(tree);
@@ -153,6 +154,19 @@
                 caretList[i].classList.remove("caret-down");
             }
         }
+
+        function withAllLeafs() {
+            tree.withAllLeafs(function (level, currentNode) {
+                console.log(level, currentNode.content);
+                if (!currentNode.content.startsWith('leaf of')){
+                    tree.addNode(currentNode.key, 'leaf of ' + currentNode.content);
+                }
+                // currentNode.content += "*";
+            });
+            var u_list = createUnorderedList();
+            document.querySelector('#parentUL').innerHTML = u_list;
+            expandAll();
+        }
     </script>
     <!-- <script type='module' src='build/translate.js'></script>       -->
 </head>
@@ -161,12 +175,12 @@
     <nav>
         <a href="./index.html">Home</a>
         <a href="./editTree.html">Edit Tree</a>
-        <a class="selected">View Tree</a>
-        <a href="./testWithAllLeafs.html">Test withAllLeafs</a>
+        <a href="./viewTree.html">View Tree</a>
+        <a class="selected">Test withAllLeafs</a>
         <a href="./license.html">License</a>
     </nav>
     <h1>keybased-tree</h1>
-   <h2>View Tree</h2>
+    <h2>Test - With All Leafs...</h2>
     <!-- <h2>livereload active</h2> -->
     <p>Version: <span id="versioninfo">version</span></p>
     <h3>tree created fron JSON code in HTML file</h3>
@@ -176,6 +190,7 @@
     <!-- https://www.w3schools.com/html/html_form_input_types.asp -->
     <input type="button" onclick="expandAll()" value="Expand all">
     <input type="button" onclick="collapseAll()" value="Collapse all">
+    <input type="button" onclick="withAllLeafs()" value="With all leafs...">
     <!-- https://www.w3schools.com/howto/howto_js_treeview.asp -->
     <div id="treeview">
         <ul id="parentUL">
