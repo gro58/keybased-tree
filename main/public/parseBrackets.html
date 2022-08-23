@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <title>keybased-tree - parse brackets</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='./css/keybasedTree.css'>
+    <link rel="icon" href="./favicon.ico">
+    <script src='build/bundle.js'></script>
+    <script>
+        console.log('version (from package.json) ', bridge.version);
+        var i = 0;
+        var testArray;
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("DOM is loaded");
+            testArray = bridge.createTexStrings();
+            console.log(testArray);
+            document.querySelector('#versioninfo').innerHTML = bridge.version;
+            nextString();
+        });
+
+        function nextString() {
+            if (i < testArray.length) {
+                var texString = testArray[i];
+                document.querySelector('#in').textContent = 'input ' + i + ' ' + texString;
+                var parsed = parse(texString);
+                document.querySelector('#out').textContent = parsed;
+            }
+            else {
+                document.querySelector('#in').textContent = 'End. i=' + i;
+                document.querySelector('#out').textContent = 'End!';
+            }
+            i++;
+        }
+    </script>
+    <!-- <script type='module' src='build/translate.js'></script>       -->
+</head>
+
+<body class="keybased-tree">
+    <nav>
+        <a href="./index.html">Home</a>
+        <a href="./editTree.html">Edit Tree</a>
+        <a href="./viewTree.html">View tree</a>
+        <a href="./testWithAllLeafs.html">Test withAllLeafs</a>
+        <a class="selected">Parse Brackets</a>
+        <a href="./license.html">License</a>
+    </nav>
+    <h1>keybased-tree</h1>
+    <h2>Parse brackets</h2>
+    <!-- <h2>livereload active</h2> -->
+    <p>Version: <span id="versioninfo">version</span></p>
+    <h3>Array of LaTeX test strings created by function createTexStrings() defined in <a
+            href="../src/js/texTestStrings.js">texTestStrings.js</a>
+    </h3>
+    <p id="in"> </p>
+    <p id="out"> </p>
+    <input type="button" onclick="nextString()" value="Next">
+    <h3>view of tree using tree.fromRootToLeafs</h3>
+    <textarea id="outarea_root2leafs" cols='60' rows='15'>This is line one.&#13;&#10;This is line two.</textarea>
+    <!-- <h3>view of tree using tree.fromLeafsToRoot</h3>
+    <textarea id="outarea_leafs2root" cols='60' rows='15'>This is line one.&#13;&#10;This is line two.</textarea> -->
+    <hr>
+    <div class="see_also"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
+            class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a
+            target="_blank" href="https://icons8.com"
+            class="fdm__copy-html-content fdm__copy-html-content-link">Icons8</a></div>
+</body>
+
+</html>
