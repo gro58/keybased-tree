@@ -11,12 +11,13 @@
     <script src='build/bundle.js'></script>
     <script>
         console.log('version (from package.json) ', bridge.version);
+        // TODO get rid of global vars
         var i = 0;
         var testArray;
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
             testArray = bridge.createTexStrings();
-            console.log(testArray);
+            // console.log(testArray);
             document.querySelector('#versioninfo').innerHTML = bridge.version;
             nextString();
         });
@@ -33,6 +34,10 @@
                 document.querySelector('#out').textContent = 'End!';
             }
             i++;
+        }
+
+        function parse(texString){
+            return texString + ' parsed';
         }
     </script>
     <!-- <script type='module' src='build/translate.js'></script>       -->
@@ -52,7 +57,7 @@
     <!-- <h2>livereload active</h2> -->
     <p>Version: <span id="versioninfo">version</span></p>
     <h3>Array of LaTeX test strings created by function createTexStrings() defined in <a
-            href="../src/js/texTestStrings.js">texTestStrings.js</a>
+            href="../src/js/createLatexTestStrings.js">createLatexTestStrings.js</a>
     </h3>
     <p id="in"> </p>
     <p id="out"> </p>

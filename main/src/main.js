@@ -5,7 +5,7 @@ import {createTree, createTreeFromJson} from './js/keybasedTree.js';
 import {demoTree} from './js/CreateDemoTree.js';
 import {version} from '../package.json';
 // for LaTeX parser
-import createTexStrings from './js/texTestStrings.js';
+import createTexStrings from './js/createLatexTestStrings.js';
 
 
 // after import of bundle, using <script src='build/bundle.js'></script>,
