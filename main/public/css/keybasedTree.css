@@ -52,7 +52,7 @@ div.see_also {
     font-style: italic;
 }
 
-p#out {
+p span#in, p span#out {
     font-family: 'Console', Courier, monospace;
     font-size: smaller;
 }

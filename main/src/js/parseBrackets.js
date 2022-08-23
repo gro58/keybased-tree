@@ -12,6 +12,9 @@ export default function findLeftmostBracket(haystack) {
      * changes parameters found and bestPos
      *
      * @param {*} needle - bracket to be looked for
+     * changes variables bestPos and found
+     * @returns {object} bestPos - position of leftmost bracket or -1 if no bracket
+     * found - type of bracket at bestPos or null if no bracket
      */
     function lookForBracket(needle) {
         var newPos = haystack.indexOf(needle);
@@ -23,6 +26,8 @@ export default function findLeftmostBracket(haystack) {
         }
     }
 
+    console.log(Array(20+ 1).join("-"));
+    console.log(haystack);
     //look for different types of brackets
     //and improve position if better (smaller but not -1)
     lookForBracket('\\left(');

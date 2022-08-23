@@ -25,10 +25,12 @@
         function nextString() {
             if (i < testArray.length) {
                 var texString = testArray[i];
-                document.querySelector('#in').textContent = 'input ' + i + ' ' + texString;
+                var preface = i + ': ';
+                document.querySelector('#in').textContent =  preface + texString;
                 // var parsed = parse(texString);
                 var result = bridge.findLeftmostBracket(texString);
-                document.querySelector('#out').textContent = result.bestPosition + ' ' + result.bracket;
+                var dashes = Array(result.bestPosition + 1).join('-');
+                document.querySelector('#out').textContent = preface + dashes + result.bracket;
             }
             else {
                 document.querySelector('#in').textContent = 'End. i=' + i;
@@ -59,8 +61,7 @@
     <h3>Array of LaTeX test strings created by function createTexStrings() defined in <a
             href="../src/js/createLatexTestStrings.js">createLatexTestStrings.js</a>
     </h3>
-    <p id="in"> </p>
-    <p id="out"> </p>
+    <p><span id="in"></span><br><span id="out"></span></p>
     <input type="button" onclick="nextString()" value="Next">
     <h3>view of tree using tree.fromRootToLeafs</h3>
     <textarea id="outarea_root2leafs" cols='60' rows='15'>This is line one.&#13;&#10;This is line two.</textarea>

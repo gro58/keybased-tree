@@ -10,5 +10,9 @@ export default function createTexStrings(){
     test.push('u+\\left[2a+\\left(4b+c\\right)\\right][7d-9e\\left(\\frac{z-2}{\\left(u+2\\right)(c+3)}\\right)]');
     test.push('\\left(s+\\left(a+2\\right)(5f-3\\left(w-r\\right))\\left(f-3\\right)-\\left(-s+22\\right)\\right)');
     test.push('3.14+\\left(s+\\left(a+2\\right)[5f-3\\left(w-r\\right)]\\left(f-3\\right)-\\left(-s+22\\right)\\right)');
+    // no brackets
+    test.push('a+3*(x-5b)');
+    test.push('4+5*(w+t)[3-[z+u]]');
+    test.push('4+5*[w+t]((3+z)+u)(r-v)');
     return test;
 }
