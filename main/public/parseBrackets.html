@@ -26,8 +26,9 @@
             if (i < testArray.length) {
                 var texString = testArray[i];
                 document.querySelector('#in').textContent = 'input ' + i + ' ' + texString;
-                var parsed = parse(texString);
-                document.querySelector('#out').textContent = parsed;
+                // var parsed = parse(texString);
+                var result = bridge.findLeftmostBracket(texString);
+                document.querySelector('#out').textContent = result.bestPosition + ' ' + result.bracket;
             }
             else {
                 document.querySelector('#in').textContent = 'End. i=' + i;
@@ -37,7 +38,6 @@
         }
 
         function parse(texString){
-            return texString + ' parsed';
         }
     </script>
     <!-- <script type='module' src='build/translate.js'></script>       -->

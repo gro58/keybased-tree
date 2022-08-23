@@ -6,6 +6,7 @@ import {demoTree} from './js/CreateDemoTree.js';
 import {version} from '../package.json';
 // for LaTeX parser
 import createTexStrings from './js/createLatexTestStrings.js';
+import findLeftmostBracket from './js/parseBrackets.js';
 
 
 // after import of bundle, using <script src='build/bundle.js'></script>,
@@ -16,7 +17,8 @@ export {
     createTreeFromJson,
     version,
     demoTree,
-    createTexStrings
+    createTexStrings,
+    findLeftmostBracket
 };
 
 window.onload = function () {
