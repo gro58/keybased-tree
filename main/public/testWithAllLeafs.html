@@ -33,7 +33,7 @@
                 "key": "tvz",
                 "parentKey": "7zC",
                 "children": [],
-                "content": "content-R"
+                "content": "content-R|child-R|grandchild-R"
             },
             "9CS": {
                 "key": "9CS",
@@ -45,7 +45,7 @@
                 "key": "Tz1",
                 "parentKey": "7zC",
                 "children": [],
-                "content": "content-E"
+                "content": "content-E|child-E"
             },
             "rnh": {
                 "key": "rnh",
@@ -57,7 +57,7 @@
                 "key": "tb0",
                 "parentKey": "53p",
                 "children": [],
-                "content": "content-A"
+                "content": "content-A|child-A"
             },
             "lJo": {
                 "key": "lJo",
@@ -69,13 +69,13 @@
                 "key": "DzC",
                 "parentKey": "53p",
                 "children": ["lJo"],
-                "content": "Insert-K"
+                "content": "content-K|child-K"
             },
             "Mz6": {
                 "key": "Mz6",
                 "parentKey": "9CS",
                 "children": ["rnh"],
-                "content": "Insert-B"
+                "content": "content-B"
             }
         }
         var tree = bridge.createTreeFromJson(tree_json);
@@ -124,6 +124,7 @@
             document.querySelector('#parentUL').innerHTML = u_list;
             document.querySelector('#versioninfo').innerHTML = bridge.version;
             document.querySelector('#out').textContent = JSON.stringify(tree);
+            expandAll();
 
             // event listeners for treeview - make nodes expand/collapse on click
             var toggler = document.getElementsByClassName("caret");
@@ -158,10 +159,14 @@
         function withAllLeafs() {
             tree.withAllLeafs(function (level, currentNode) {
                 console.log(level, currentNode.content);
-                if (!currentNode.content.startsWith('leaf of')){
-                    tree.addNode(currentNode.key, 'leaf of ' + currentNode.content);
+                var position = currentNode.content.indexOf('|');
+                if (position >= 0) {
+                    var before = currentNode.content.slice(0, position);
+                    var after = currentNode.content.slice(position + 1);
+                    console.log('before', before, 'after', after);
+                    currentNode.content = before;
+                    tree.addNode(currentNode.key, after);
                 }
-                // currentNode.content += "*";
             });
             var u_list = createUnorderedList();
             document.querySelector('#parentUL').innerHTML = u_list;
