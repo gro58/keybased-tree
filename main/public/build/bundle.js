@@ -359,7 +359,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.26";
+    var version = "0.1.27";
 
     /**
      * create an array of LaTeX strings with brackets for test purposes
@@ -388,7 +388,7 @@ var bridge = (function (exports) {
 
      */
     function findLeftmostBracket(haystack) {
-        var found = null;
+        var found = '';
         var bestPos = -1;
         /**
          * changes parameters found and bestPos
@@ -396,7 +396,7 @@ var bridge = (function (exports) {
          * @param {*} needle - bracket to be looked for
          * changes variables bestPos and found
          * @returns {object} bestPos - position of leftmost bracket or -1 if no bracket
-         * found - type of bracket at bestPos or null if no bracket
+         * found - type of bracket at bestPos or empty string if no bracket
          */
         function lookForBracket(needle) {
             var newPos = haystack.indexOf(needle);
@@ -407,22 +407,6 @@ var bridge = (function (exports) {
                 console.log('improvement: found ' + needle + ' at position ' + bestPos);
             }
         }
-
-        console.log(Array(20 + 1).join("-"));
-        console.log(haystack);
-        //look for different types of brackets
-        //and improve position if better (smaller but not -1)
-        lookForBracket('\\left(');
-        lookForBracket('\\left[');
-        lookForBracket('\\left\\{');
-        lookForBracket('(');
-        lookForBracket('[');
-        lookForBracket('{');
-
-        return {
-            bestPosition: bestPos,
-            bracket: found
-        };
 
         function improvePosition(newPos) {
             if (newPos !== -1) {
@@ -442,7 +426,24 @@ var bridge = (function (exports) {
             return false;
             //default: no improvement
         }
+
+        console.log(Array(20 + 1).join("-"));
+        console.log(haystack);
+        //look for different types of brackets
+        //and improve position if better (smaller but not -1)
+        lookForBracket('\\left(');
+        lookForBracket('\\left[');
+        lookForBracket('\\left\\{');
+        lookForBracket('(');
+        lookForBracket('[');
+        lookForBracket('{');
+
+        return {
+            leftPos: bestPos,
+            leftBracket: found
+        };
     }
+
 
     /** 
      * 
@@ -471,7 +472,7 @@ var bridge = (function (exports) {
         var rightbracket = left2right[leftbracket];
         if (typeof rightbracket === 'undefined') {
             rightbracket = '';
-            message = 'unknown type of left bracket: ' + leftbracket;
+            message = 'no left bracket';
         } else {
             var pos;
             var stop = false;
@@ -485,6 +486,7 @@ var bridge = (function (exports) {
                 if (pos === -1) {
                     stop = true;
                 } else {
+                    // left bracket has weight 1
                     weight[pos] = 1;
                     if (leftPos === -1) {
                         leftPos = pos;
@@ -501,14 +503,16 @@ var bridge = (function (exports) {
                     if (pos === -1) {
                         stop = true;
                     } else {
+                        // right bracket has weight -1
                         weight[pos] = -1;
                     }
                 } while (stop === false);
-                // sum of masses
+                // calculate sum of masses (and store in weight array)
                 for (i = 1; i < haystack.length; i++) {
                     var sum = weight[i - 1] + weight[i];
                     if (weight[i] === -1 && sum === 0) {
                         rightPos = i;
+                        // short circuit; stop calculating sums
                         break;
                     }
                     weight[i] = sum;
@@ -520,11 +524,9 @@ var bridge = (function (exports) {
         }
         return {
             message: message,
-            leftPos: leftPos,
-            bracketLength: leftbracket.length,
+            leftPos: leftPos, //for comparison
             rightBracket: rightbracket,
             rightPos: rightPos,
-            rightbracketLength: rightbracket.length
         }
     }
 

@@ -28,24 +28,20 @@
                 var preface = i + ': ';
                 document.querySelector('#in').textContent = preface + texString;
                 var leftResult = bridge.findLeftmostBracket(texString);
-                var rightResult = bridge.findCorrespondingRightBracket(texString, leftResult.bracket);
-                if (leftResult.bestPosition !== -1) {
-                    var leftDashes = Array(leftResult.bestPosition + 1).join('-');
-                    if (rightResult.rightPos !== -1){
-                        var rightDashes = Array(rightResult.rightPos + 1).join('-');
-                    } else {
-                        rightDashes = '';
-                    }
+                var rightResult = bridge.findCorrespondingRightBracket(texString, leftResult.leftBracket);
+                var leftDashes = Array(leftResult.leftPos + 1).join('-');
+                var rightDashes = Array(rightResult.rightPos + 1).join('-');
+                document.querySelector('#outleft').textContent = preface + leftDashes + leftResult.leftBracket;
+                if (rightResult.message === 'OK'){
+                    document.querySelector('#outright').textContent = preface + rightDashes + rightResult.rightBracket;
                 } else {
-                    leftDashes = '';
+                    document.querySelector('#outright').textContent = preface + rightResult.message;
                 }
-                document.querySelector('#outleft').textContent = preface + leftDashes + leftResult.bracket;
-                document.querySelector('#outright').textContent = preface + rightDashes + rightResult.rightBracket;
             }
             else {
-                document.querySelector('#in').textContent = 'End. i=' + i;
+                document.querySelector('#in').textContent = 'i=' + i;
                 document.querySelector('#outleft').textContent = 'End!';
-                document.querySelector('#outright').textContent = 'End!';
+                document.querySelector('#outright').textContent = '';
             }
             i++;
         }
