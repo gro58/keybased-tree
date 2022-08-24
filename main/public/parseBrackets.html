@@ -26,20 +26,28 @@
             if (i < testArray.length) {
                 var texString = testArray[i];
                 var preface = i + ': ';
-                document.querySelector('#in').textContent =  preface + texString;
-                // var parsed = parse(texString);
-                var result = bridge.findLeftmostBracket(texString);
-                var dashes = Array(result.bestPosition + 1).join('-');
-                document.querySelector('#out').textContent = preface + dashes + result.bracket;
+                document.querySelector('#in').textContent = preface + texString;
+                var leftResult = bridge.findLeftmostBracket(texString);
+                var rightResult = bridge.findCorrespondingRightBracket(texString, leftResult.bracket);
+                if (leftResult.bestPosition !== -1) {
+                    var leftDashes = Array(leftResult.bestPosition + 1).join('-');
+                    if (rightResult.rightPos !== -1){
+                        var rightDashes = Array(rightResult.rightPos + 1).join('-');
+                    } else {
+                        rightDashes = '';
+                    }
+                } else {
+                    leftDashes = '';
+                }
+                document.querySelector('#outleft').textContent = preface + leftDashes + leftResult.bracket;
+                document.querySelector('#outright').textContent = preface + rightDashes + rightResult.rightBracket;
             }
             else {
                 document.querySelector('#in').textContent = 'End. i=' + i;
-                document.querySelector('#out').textContent = 'End!';
+                document.querySelector('#outleft').textContent = 'End!';
+                document.querySelector('#outright').textContent = 'End!';
             }
             i++;
-        }
-
-        function parse(texString){
         }
     </script>
     <!-- <script type='module' src='build/translate.js'></script>       -->
@@ -61,10 +69,10 @@
     <h3>Array of LaTeX test strings created by function createTexStrings() defined in <a
             href="../src/js/createLatexTestStrings.js">createLatexTestStrings.js</a>
     </h3>
-    <p><span id="in"></span><br><span id="out"></span></p>
+    <p><span id="in"></span><br><span id="outleft"></span><br><span id="outright"></span></p>
     <input type="button" onclick="nextString()" value="Next">
-    <h3>view of tree using tree.fromRootToLeafs</h3>
-    <textarea id="outarea_root2leafs" cols='60' rows='15'>This is line one.&#13;&#10;This is line two.</textarea>
+    <!-- <h3>view of tree using tree.fromRootToLeafs</h3>
+    <textarea id="outarea_root2leafs" cols='60' rows='15'>This is line one.&#13;&#10;This is line two.</textarea> -->
     <!-- <h3>view of tree using tree.fromLeafsToRoot</h3>
     <textarea id="outarea_leafs2root" cols='60' rows='15'>This is line one.&#13;&#10;This is line two.</textarea> -->
     <hr>

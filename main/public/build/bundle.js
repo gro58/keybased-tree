@@ -359,7 +359,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.25";
+    var version = "0.1.26";
 
     /**
      * create an array of LaTeX strings with brackets for test purposes
@@ -373,7 +373,7 @@ var bridge = (function (exports) {
         test.push('u+\\left[2a+\\left(4b+c\\right)\\right][7d-9e\\left(\\frac{z-2}{\\left(u+2\\right)(c+3)}\\right)]');
         test.push('\\left(s+\\left(a+2\\right)(5f-3\\left(w-r\\right))\\left(f-3\\right)-\\left(-s+22\\right)\\right)');
         test.push('3.14+\\left(s+\\left(a+2\\right)[5f-3\\left(w-r\\right)]\\left(f-3\\right)-\\left(-s+22\\right)\\right)');
-        // no brackets
+        test.push('a+3x-5b'); // no brackets
         test.push('a+3*(x-5b)');
         test.push('4+5*(w+t)[3-[z+u]]');
         test.push('4+5*[w+t]((3+z)+u)(r-v)');
@@ -408,7 +408,7 @@ var bridge = (function (exports) {
             }
         }
 
-        console.log(Array(20+ 1).join("-"));
+        console.log(Array(20 + 1).join("-"));
         console.log(haystack);
         //look for different types of brackets
         //and improve position if better (smaller but not -1)
@@ -444,6 +444,90 @@ var bridge = (function (exports) {
         }
     }
 
+    /** 
+     * 
+     * @param {string} haystack 
+     * @param {string} leftbracket 
+     * @returns {object} message, leftpos, leftbracketLength, rightpos, rightbracketLength
+     * message = 'OK' or error message
+     * leftpos = position of first accurence of left bracket
+     * rightpos = position of corresponding(!) right bracket     
+     */
+    function findCorrespondingRightBracket(haystack, leftbracket) {
+        var message = 'OK';
+        var leftPos = -1;
+        var rightPos = -1;
+
+        const left2right = {
+            '(': ')',
+            '[': ']',
+            '{': '}',
+            '|': '|',
+            '\\left(': '\\right)',
+            '\\left[': '\\right]',
+            '\\left\\{': '\\right\\}',
+            '\\left|': '\\right|'
+        };
+        var rightbracket = left2right[leftbracket];
+        if (typeof rightbracket === 'undefined') {
+            rightbracket = '';
+            message = 'unknown type of left bracket: ' + leftbracket;
+        } else {
+            var pos;
+            var stop = false;
+            var weight = [];
+            for (var i = 0; i < haystack.length; i++) {
+                weight[i] = 0;
+            }
+            pos = -1;
+            do {
+                pos = haystack.indexOf(leftbracket, pos + 1);
+                if (pos === -1) {
+                    stop = true;
+                } else {
+                    weight[pos] = 1;
+                    if (leftPos === -1) {
+                        leftPos = pos;
+                    }
+                }
+            } while (stop === false);
+            if (leftPos === -1) {
+                message = 'no left bracket found: ' + leftbracket;
+            } else {
+                pos = -1;
+                stop = false;
+                do {
+                    pos = haystack.indexOf(rightbracket, pos + 1);
+                    if (pos === -1) {
+                        stop = true;
+                    } else {
+                        weight[pos] = -1;
+                    }
+                } while (stop === false);
+                // sum of masses
+                for (i = 1; i < haystack.length; i++) {
+                    var sum = weight[i - 1] + weight[i];
+                    if (weight[i] === -1 && sum === 0) {
+                        rightPos = i;
+                        break;
+                    }
+                    weight[i] = sum;
+                }
+                if (rightPos === -1) {
+                    message = 'no corresponding right bracket found: ' + rightbracket;
+                }
+            }
+        }
+        return {
+            message: message,
+            leftPos: leftPos,
+            bracketLength: leftbracket.length,
+            rightBracket: rightbracket,
+            rightPos: rightPos,
+            rightbracketLength: rightbracket.length
+        }
+    }
+
     window.onload = function () {
         console.log('version (from package.json) ', version);
         // var newTree = demoTree();
@@ -459,6 +543,7 @@ var bridge = (function (exports) {
     exports.createTree = createTree;
     exports.createTreeFromJson = createTreeFromJson;
     exports.demoTree = demoTree;
+    exports.findCorrespondingRightBracket = findCorrespondingRightBracket;
     exports.findLeftmostBracket = findLeftmostBracket;
     exports.mainIsLoaded = mainIsLoaded;
     exports.version = version;

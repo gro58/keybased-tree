@@ -5,7 +5,7 @@
  * - bracket: kind of bracket corresponding to best position or null if no bracket found
 
  */
-export default function findLeftmostBracket(haystack) {
+export function findLeftmostBracket(haystack) {
     var found = null;
     var bestPos = -1;
     /**
@@ -26,7 +26,7 @@ export default function findLeftmostBracket(haystack) {
         }
     }
 
-    console.log(Array(20+ 1).join("-"));
+    console.log(Array(20 + 1).join("-"));
     console.log(haystack);
     //look for different types of brackets
     //and improve position if better (smaller but not -1)
@@ -59,5 +59,89 @@ export default function findLeftmostBracket(haystack) {
         // newPos === -1 means no improvement, do not change bestPos
         return false;
         //default: no improvement
+    }
+}
+
+/** 
+ * 
+ * @param {string} haystack 
+ * @param {string} leftbracket 
+ * @returns {object} message, leftpos, leftbracketLength, rightpos, rightbracketLength
+ * message = 'OK' or error message
+ * leftpos = position of first accurence of left bracket
+ * rightpos = position of corresponding(!) right bracket     
+ */
+export function findCorrespondingRightBracket(haystack, leftbracket) {
+    var message = 'OK';
+    var leftPos = -1;
+    var rightPos = -1;
+
+    const left2right = {
+        '(': ')',
+        '[': ']',
+        '{': '}',
+        '|': '|',
+        '\\left(': '\\right)',
+        '\\left[': '\\right]',
+        '\\left\\{': '\\right\\}',
+        '\\left|': '\\right|'
+    }
+    var rightbracket = left2right[leftbracket];
+    if (typeof rightbracket === 'undefined') {
+        rightbracket = '';
+        message = 'unknown type of left bracket: ' + leftbracket;
+    } else {
+        var pos;
+        var stop = false;
+        var weight = [];
+        for (var i = 0; i < haystack.length; i++) {
+            weight[i] = 0;
+        }
+        pos = -1;
+        do {
+            pos = haystack.indexOf(leftbracket, pos + 1);
+            if (pos === -1) {
+                stop = true;
+            } else {
+                weight[pos] = 1;
+                if (leftPos === -1) {
+                    leftPos = pos;
+                }
+            }
+        } while (stop === false);
+        if (leftPos === -1) {
+            message = 'no left bracket found: ' + leftbracket;
+        } else {
+            pos = -1;
+            stop = false;
+            do {
+                pos = haystack.indexOf(rightbracket, pos + 1);
+                if (pos === -1) {
+                    stop = true;
+                } else {
+                    weight[pos] = -1;
+                }
+            } while (stop === false);
+            // sum of masses
+            for (i = 1; i < haystack.length; i++) {
+                var sum = weight[i - 1] + weight[i];
+                if (weight[i] === -1 && sum === 0) {
+                    rightPos = i;
+                    break;
+                }
+                weight[i] = sum;
+            }
+            if (rightPos === -1) {
+                message = 'no corresponding right bracket found: ' + rightbracket;
+            }
+        }
+    }
+    return {
+        message: message,
+        leftPos: leftPos,
+        bracketLength: leftbracket.length,
+        rightBracket: rightbracket,
+        rightPos: rightPos,
+        rightbracketLength: rightbracket.length
     }
 }

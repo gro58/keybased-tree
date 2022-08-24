@@ -1,12 +1,12 @@
 "use strict";
 // for keybasedTree
 import config from "./js/config.json";
-import {createTree, createTreeFromJson} from './js/keybasedTree.js';
-import {demoTree} from './js/CreateDemoTree.js';
-import {version} from '../package.json';
+import { createTree, createTreeFromJson } from './js/keybasedTree.js';
+import { demoTree } from './js/CreateDemoTree.js';
+import { version } from '../package.json';
 // for LaTeX parser
 import createTexStrings from './js/createLatexTestStrings.js';
-import findLeftmostBracket from './js/parseBrackets.js';
+import { findLeftmostBracket, findCorrespondingRightBracket } from './js/parseBrackets.js';
 
 
 // after import of bundle, using <script src='build/bundle.js'></script>,
@@ -18,7 +18,8 @@ export {
     version,
     demoTree,
     createTexStrings,
-    findLeftmostBracket
+    findLeftmostBracket,
+    findCorrespondingRightBracket
 };
 
 window.onload = function () {
