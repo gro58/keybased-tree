@@ -11,8 +11,8 @@
     <script src='build/bundle.js'></script>
     <script>
         console.log('version (from package.json) ', bridge.version);
+        var tree;
         // TODO get rid of global vars
-        var i = 0;
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
             document.querySelector('#versioninfo').innerHTML = bridge.version;
@@ -33,11 +33,28 @@
 
         function nextStep() {
             console.log('next step');
+            var collect = '';
+            var logNodeWithDashes = function (level, currentNode) {
+                var dashes = Array(level + 1).join("--");
+                collect += dashes;
+                collect += currentNode.content;
+                if (currentNode.children.length === 0) {
+                // https://www.utf8icons.com/character/127811/leaf-fluttering-in-wind
+                // collect += '&#127811;'
+                collect += ' \u2618'; //shamrock
+                }
+                collect += '&#13;&#10;' //CRLF
+                // console.log(dashes, currentNode.content);
+            };
+            tree.fromRootToLeafs(logNodeWithDashes);
+            document.querySelector('#outarea_root2leafs').innerHTML = collect;
+
         }
 
         function handleSelect(){
-            var x = document.getElementById("latexId").value;
-            console.log(x);
+            var latex = document.getElementById("latexId").value;
+            tree = bridge.createTree(latex);
+            nextStep();
         }
     </script>
 </head>
@@ -61,12 +78,9 @@
     </h3>
     <label for="latex">Choose a LaTeX string:</label>
     <select name="latex" id="latexId" onChange="handleSelect()"></select>
-    <p><span id="in"></span><br><span id="outleft"></span><br><span id="outright"></span></p>
-    <input type="button" onclick="nextStep()" value="Next Step">
-    <!-- <h3>view of tree using tree.fromRootToLeafs</h3>
-    <textarea id="outarea_root2leafs" cols='60' rows='15'>This is line one.&#13;&#10;This is line two.</textarea> -->
-    <!-- <h3>view of tree using tree.fromLeafsToRoot</h3>
-    <textarea id="outarea_leafs2root" cols='60' rows='15'>This is line one.&#13;&#10;This is line two.</textarea> -->
+    <h3>View tree</h3>
+    <textarea id="outarea_root2leafs" cols='60' rows='15'>This is line one.&#13;&#10;This is line two.</textarea>
+    <div><input type="button" onclick="nextStep()" value="Next Step"></div>
     <hr>
     <div class="see_also"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
             class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a

@@ -361,7 +361,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.31";
+    var version = "0.1.32";
 
     /**
      * create an array of LaTeX strings with brackets for test purposes
