@@ -28,30 +28,34 @@
             }
             document.querySelector('#latexId').innerHTML = temp;
             handleSelect();
-            nextStep();
         });
 
-        function nextStep() {
-            console.log('next step');
+        function updateTree() {
             var collect = '';
             var logNodeWithDashes = function (level, currentNode) {
                 var dashes = Array(level + 1).join("--");
                 collect += dashes;
                 collect += currentNode.content;
                 if (currentNode.children.length === 0) {
-                // https://www.utf8icons.com/character/127811/leaf-fluttering-in-wind
-                // collect += '&#127811;'
-                collect += ' \u2618'; //shamrock
+                    // https://www.utf8icons.com/character/127811/leaf-fluttering-in-wind
+                    // collect += '&#127811;'
+                    collect += ' \u2618'; //shamrock
                 }
                 collect += '&#13;&#10;' //CRLF
                 // console.log(dashes, currentNode.content);
             };
             tree.fromRootToLeafs(logNodeWithDashes);
             document.querySelector('#outarea_root2leafs').innerHTML = collect;
-
         }
 
-        function handleSelect(){
+        function nextStep() {
+            console.log('next step');
+            var root = tree['root'];
+            bridge.analyzeNodeBrackets(tree, root);
+            updateTree();
+        }
+
+        function handleSelect() {
             var latex = document.getElementById("latexId").value;
             tree = bridge.createTree(latex);
             nextStep();

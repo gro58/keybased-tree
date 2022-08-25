@@ -361,7 +361,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.32";
+    var version = "0.1.33";
 
     /**
      * create an array of LaTeX strings with brackets for test purposes
@@ -453,13 +453,14 @@ var bridge = (function (exports) {
     /** 
      * 
      * @param {string} haystack 
-     * @param {string} leftbracket 
-     * @returns {object} message, leftpos, leftbracketLength, rightpos, rightbracketLength
+     * @returns {object} message, leftBracket, leftpos, rightBracket, rightpos
      * message = 'OK' or error message
      * leftpos = position of first accurence of left bracket
      * rightpos = position of corresponding(!) right bracket     
      */
-    function findCorrespondingRightBracket(haystack, leftbracket) {
+    function findOutmostBracketPair(haystack) {
+        var leftResult = findLeftmostBracket(haystack);
+
         var message = 'OK';
         var leftPos = -1;
         var rightPos = -1;
@@ -474,9 +475,9 @@ var bridge = (function (exports) {
             '\\left\\{': '\\right\\}',
             '\\left|': '\\right|'
         };
-        var rightbracket = left2right[leftbracket];
-        if (typeof rightbracket === 'undefined') {
-            rightbracket = '';
+        var rightBracket = left2right[leftResult.leftBracket];
+        if (typeof rightBracket === 'undefined') {
+            rightBracket = '';
             message = 'no left bracket';
         } else {
             var pos;
@@ -487,7 +488,7 @@ var bridge = (function (exports) {
             }
             pos = -1;
             do {
-                pos = haystack.indexOf(leftbracket, pos + 1);
+                pos = haystack.indexOf(leftResult.leftBracket, pos + 1);
                 if (pos === -1) {
                     stop = true;
                 } else {
@@ -499,12 +500,12 @@ var bridge = (function (exports) {
                 }
             } while (stop === false);
             if (leftPos === -1) {
-                message = 'no left bracket found: ' + leftbracket;
+                message = 'no left bracket found: ' + leftResult.leftBracket;
             } else {
                 pos = -1;
                 stop = false;
                 do {
-                    pos = haystack.indexOf(rightbracket, pos + 1);
+                    pos = haystack.indexOf(rightBracket, pos + 1);
                     if (pos === -1) {
                         stop = true;
                     } else {
@@ -523,16 +524,55 @@ var bridge = (function (exports) {
                     weight[i] = sum;
                 }
                 if (rightPos === -1) {
-                    message = 'no corresponding right bracket found: ' + rightbracket;
+                    message = 'no corresponding right bracket found: ' + rightBracket;
                 }
             }
         }
+        if (leftPos !== leftResult.leftPos) {
+            throw new Error('inconsistent left positions of brackets. This should not happen');
+        }
         return {
             message: message,
-            leftPos: leftPos, //for comparison
-            rightBracket: rightbracket,
+            leftBracket: leftResult.leftBracket,
+            leftPos: leftPos,
+            rightBracket: rightBracket,
             rightPos: rightPos,
         }
+    }
+
+    function analyzeNodeBrackets(tree, node) {
+        var stop = false;
+        do {
+            var content = node.content;
+            var result = findOutmostBracketPair(content);
+            // console.log(result);
+            if (result.message === 'OK') {
+                var leftpart = content.substring(0, result.leftPos);
+                var middlepart = content.substring(result.leftPos + result.leftBracket.length, result.rightPos);
+                var rightpart = content.substring(result.rightPos + result.rightBracket.length);
+                node.content = leftpart + '§' + rightpart;
+                var bracketNode = tree.addNode(node.key, 'bracket-' + result.leftBracket);
+                tree.addNode(bracketNode.key, middlepart);
+            } else {
+                node.content = result.message;
+            }
+
+            // var bracket = createNode('bracket-' + bra, '', tree);
+            // var middle = createNode('leaf', middlepart, tree);
+            // if (middlepart === ' ') { // e.g. indefinite integral
+            //     middle.type = 'empty';
+            // }
+            // // first connection
+            // this.children.push(bracket.id);
+
+            // bracket.parent = this.id;
+            // // second connection
+            // bracket.children.push(middle.id);
+            // middle.parent = bracket.id;
+
+
+            stop = true;
+        } while (stop === false)
     }
 
     window.onload = function () {
@@ -545,13 +585,13 @@ var bridge = (function (exports) {
         return true;
     }
 
+    exports.analyzeNodeBrackets = analyzeNodeBrackets;
     exports.config = config;
     exports.createTexStrings = createTexStrings;
     exports.createTree = createTree;
     exports.createTreeFromJson = createTreeFromJson;
     exports.demoTree = demoTree;
-    exports.findCorrespondingRightBracket = findCorrespondingRightBracket;
-    exports.findLeftmostBracket = findLeftmostBracket;
+    exports.findOutmostBracketPair = findOutmostBracketPair;
     exports.mainIsLoaded = mainIsLoaded;
     exports.version = version;
 

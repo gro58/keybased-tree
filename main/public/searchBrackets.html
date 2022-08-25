@@ -27,15 +27,14 @@
                 var texString = testArray[i];
                 var preface = i + ': ';
                 document.querySelector('#in').textContent = preface + texString;
-                var leftResult = bridge.findLeftmostBracket(texString);
-                var rightResult = bridge.findCorrespondingRightBracket(texString, leftResult.leftBracket);
-                var leftDashes = Array(leftResult.leftPos + 1).join('-');
-                var rightDashes = Array(rightResult.rightPos + 1).join('-');
-                document.querySelector('#outleft').textContent = preface + leftDashes + leftResult.leftBracket;
-                if (rightResult.message === 'OK'){
-                    document.querySelector('#outright').textContent = preface + rightDashes + rightResult.rightBracket;
+                var result = bridge.findOutmostBracketPair(texString);
+                var leftDashes = Array(result.leftPos + 1).join('-');
+                var rightDashes = Array(result.rightPos + 1).join('-');
+                document.querySelector('#outleft').textContent = preface + leftDashes + result.leftBracket;
+                if (result.message === 'OK'){
+                    document.querySelector('#outright').textContent = preface + rightDashes + result.rightBracket;
                 } else {
-                    document.querySelector('#outright').textContent = preface + rightResult.message;
+                    document.querySelector('#outright').textContent = preface + result.message;
                 }
             }
             else {
