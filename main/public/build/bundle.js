@@ -198,7 +198,8 @@ var bridge = (function (exports) {
             var newKey = nonexistingRandomKey(tree, 3);
             var newNode = {
                 key: newKey,
-                parentKey: node.parentKey,
+                // parentKey: node.parentKey,
+                parentKey: parent.key,
                 children: [node.key],
                 content: newContent,
                 // isLeaf: function () {
@@ -206,8 +207,8 @@ var bridge = (function (exports) {
                 // }
             };
             var childIndex = parent.children.indexOf(node.key);
-            // TODO bug? better ad to childlist?
             parent.children[childIndex] = newKey;
+            node.parentKey = newKey;
             tree[newKey] = newNode;
             return newNode;
         } else {
@@ -228,7 +229,8 @@ var bridge = (function (exports) {
                     if (parent) {
                         childIndex = parent.children.indexOf(key);
                         // remove key from array of children of parent
-                        parent.children.splice(childIndex);
+                        // https://www.w3schools.com/jsref/jsref_splice.asp
+                        parent.children.splice(childIndex, 1);
                         node_clone = JSON.parse(JSON.stringify(node));
                         delete tree[key];
                         return node_clone;
@@ -359,7 +361,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.28";
+    var version = "0.1.29";
 
     /**
      * create an array of LaTeX strings with brackets for test purposes

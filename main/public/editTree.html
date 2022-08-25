@@ -19,7 +19,13 @@
         });
 
         function refreshTreeView() {
-            document.querySelector('#out').textContent = JSON.stringify(tree);
+            var temp = JSON.stringify(tree);
+            temp = temp.substring(1); //remove opening {
+            temp = temp.substring(0, temp.length - 1); //remove trailing }
+            temp = temp.replace(/},/g, "},<br>");
+            temp = "{<br>" + temp + "<br>}";
+            // document.querySelector('#out').textContent = temp;
+            document.querySelector('#out').innerHTML = temp;
             // console.log(tree);
             var collect = '';
             var logNodeWithDashes = function (level, currentNode) {
@@ -139,7 +145,7 @@
     <h2>Edit Tree</h2>
     <h3>addNode, insertOver, remove a leaf or a node with exactly one child</h3>
     <p>Version: <span id="versioninfo">version</span></p>
-    <h3>JSON file created by function demoTree() defined in <a href="../src/js/createDemoTree.js">createDemoTree.js</a>
+    <h3>Initial JSON file created by function demoTree() defined in <a href="../src/js/createDemoTree.js">createDemoTree.js</a>
     </h3>
     <p id="out"> </p>
     <!-- https://www.w3schools.com/howto/howto_css_two_columns.asp -->
