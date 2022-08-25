@@ -3,10 +3,6 @@
  */
 export default function createTexStrings(){
     var test = [];
-    test.push('a+3x-5b'); // no brackets
-    test.push('\\left(a+3x-5b'); 
-    test.push('\\left(a+3x-5b)'); 
-    test.push('a+3x-5b\\right]'); 
     test.push('4+5*[w+t]((3+z)+u)(r-v)');
     test.push('\\int _1^2\\frac{1}{x^2}\\ dx={{result}}');
     test.push('3.14 + \\left[\\left(2a+4b\\right)\\right]');
@@ -17,5 +13,9 @@ export default function createTexStrings(){
     test.push('3.14+\\left(s+\\left(a+2\\right)[5f-3\\left(w-r\\right)]\\left(f-3\\right)-\\left(-s+22\\right)\\right)');
     test.push('a+3*(x-5b)');
     test.push('4+5*(w+t)[3-[z+u]]');
+    test.push('a+3x-5b'); // no brackets
+    test.push('\\left(a+3x-5b'); 
+    test.push('\\left(a+3x-5b)'); 
+    test.push('a+3x-5b\\right]'); 
     return test;
 }
