@@ -16,6 +16,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
             document.querySelector('#versioninfo').innerHTML = bridge.version;
+            bridge.waitforClickModule.setButtonId('nextStepButton')
 
             var testArray = bridge.createTexStrings();
             var temp = document.querySelector('#latexId').innerHTML;
@@ -48,17 +49,31 @@
             document.querySelector('#outarea_root2leafs').innerHTML = collect;
         }
 
-        function nextStep() {
-            console.log('next step');
+        // function nextStep() {
+        //     console.log('next step');
+        //     var root = tree['root'];
+        //     bridge.analyzeNodeBrackets(tree, root);
+        //     updateTree();
+        // }
+
+        async function loop() {
             var root = tree['root'];
-            bridge.analyzeNodeBrackets(tree, root);
-            updateTree();
+            do {
+                updateTree();
+                // waitForClick needs init with waitforClickModule.setButtonId('...');
+                await bridge.waitforClickModule.waitForClick();
+                console.log('next step');
+                var resultMessage = bridge.analyzeNodeBrackets(tree, root);
+                // } while (resultMessage === 'OK');
+                console.log(resultMessage);
+                console.log(resultMessage['PromiseResult']);
+            } while (true);
         }
 
         function handleSelect() {
             var latex = document.getElementById("latexId").value;
             tree = bridge.createTree(latex);
-            nextStep();
+            loop();
         }
     </script>
 </head>
@@ -84,7 +99,9 @@
     <select name="latex" id="latexId" onChange="handleSelect()"></select>
     <h3>View tree</h3>
     <textarea id="outarea_root2leafs" cols='60' rows='15'>This is line one.&#13;&#10;This is line two.</textarea>
-    <div><input type="button" onclick="nextStep()" value="Next Step"></div>
+    <!-- <div><input type="button" onclick="nextStep()" value="Next Step"></div> -->
+    <div><button type="button" id='nextStepButton' style='display:inline-block'>Next Step</button></div>
+
     <hr>
     <div class="see_also"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
             class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a

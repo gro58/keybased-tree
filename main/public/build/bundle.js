@@ -361,7 +361,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.36";
+    var version = "0.1.37";
 
     /**
      * create an array of LaTeX strings with brackets for test purposes
@@ -384,6 +384,55 @@ var bridge = (function (exports) {
         test.push('a+3x-5b\\right]'); 
         return test;
     }
+
+    // https://stackoverflow.com/questions/51374649/using-async-functions-to-await-user-input-from-onclick
+    var waitforClickModule = (function () {
+        var clicked = false;
+        var buttonElement, outputElement;
+
+        const timeout = async ms => new Promise(res => setTimeout(res, ms));
+
+        return {
+            setButtonId: function (buttonElementId) {
+                buttonElement = document.getElementById(buttonElementId);
+                // eslint-disable-next-line no-unused-vars
+                buttonElement.onclick = function clickEventHandler(ev) {
+                    clicked = true;
+                };
+            },
+            waitForClick: async function () {
+                // pauses script
+                while (clicked === false) {
+                    await timeout(50);
+                    // console.log('waiting');
+                }
+                // console.log('clicked');
+                clicked = false; // reset var
+            },
+            // necessary only for demo
+            setOutputElementId: function (outputElementId) {
+                outputElement = document.getElementById(outputElementId);
+            },
+            // optional
+            demo: async function () {
+                var i = 0;
+                while (i <= 2) {
+                    outputElement.innerHTML = i;
+                    await this.waitForClick();
+                    i++;
+                }
+                // next lines cannot be placed after demo()!
+                outputElement.innerHTML = 'End';
+                console.log(buttonElement.style.display);
+                buttonElement.style.display = 'none';
+            }
+        }
+    })();
+
+    // usage:
+    // waitforClickModule.setButtonId('myButton');
+    // waitforClickModule.setOutputElementId('out');
+    // waitforClickModule.demo();
 
     /**
      * 
@@ -540,9 +589,7 @@ var bridge = (function (exports) {
         }
     }
 
-    function analyzeNodeBrackets(tree, node) {
-        var stop = false;
-        do {
+    async function analyzeNodeBrackets(tree, node) {
             var content = node.content;
             var result = findOutmostBracketPair(content);
             // console.log(result);
@@ -553,76 +600,9 @@ var bridge = (function (exports) {
                 node.content = leftpart + '§' + rightpart;
                 var bracketNode = tree.addNode(node.key, 'bracket-' + result.leftBracket);
                 tree.addNode(bracketNode.key, middlepart);
-            } else {
-                node.content = result.message;
             }
-
-            // var bracket = createNode('bracket-' + bra, '', tree);
-            // var middle = createNode('leaf', middlepart, tree);
-            // if (middlepart === ' ') { // e.g. indefinite integral
-            //     middle.type = 'empty';
-            // }
-            // // first connection
-            // this.children.push(bracket.id);
-
-            // bracket.parent = this.id;
-            // // second connection
-            // bracket.children.push(middle.id);
-            // middle.parent = bracket.id;
-
-
-            stop = true;
-        } while (stop === false)
+            return result.message;
     }
-
-    // https://stackoverflow.com/questions/51374649/using-async-functions-to-await-user-input-from-onclick
-    var waitforClickModule = (function () {
-        var clicked = false;
-        var buttonElement, outputElement;
-
-        const timeout = async ms => new Promise(res => setTimeout(res, ms));
-
-        return {
-            setButtonId: function (buttonElementId) {
-                buttonElement = document.getElementById(buttonElementId);
-                // eslint-disable-next-line no-unused-vars
-                buttonElement.onclick = function clickEventHandler(ev) {
-                    clicked = true;
-                };
-            },
-            waitForClick: async function () {
-                // pauses script
-                while (clicked === false) {
-                    await timeout(50);
-                    // console.log('waiting');
-                }
-                // console.log('clicked');
-                clicked = false; // reset var
-            },
-            // necessary only for demo
-            setOutputElementId: function (outputElementId) {
-                outputElement = document.getElementById(outputElementId);
-            },
-            // optional
-            demo: async function () {
-                var i = 0;
-                while (i <= 2) {
-                    outputElement.innerHTML = i;
-                    await this.waitForClick();
-                    i++;
-                }
-                // next lines cannot be placed after demo()!
-                outputElement.innerHTML = 'End';
-                console.log(buttonElement.style.display);
-                buttonElement.style.display = 'none';
-            }
-        }
-    })();
-
-    // usage:
-    // waitforClickModule.setButtonId('myButton');
-    // waitforClickModule.setOutputElementId('out');
-    // waitforClickModule.demo();
 
     window.onload = function () {
         console.log('version (from package.json) ', version);

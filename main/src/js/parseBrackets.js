@@ -1,3 +1,5 @@
+import waitforClickModule from './waitForClick.js';
+
 /**
  * 
  * @param {*} haystack - LaTeX string with brackets to be looked for
@@ -153,9 +155,7 @@ export function findOutmostBracketPair(haystack) {
     }
 }
 
-export function analyzeNodeBrackets(tree, node) {
-    var stop = false;
-    do {
+export async function analyzeNodeBrackets(tree, node) {
         var content = node.content;
         var result = findOutmostBracketPair(content);
         // console.log(result);
@@ -167,23 +167,7 @@ export function analyzeNodeBrackets(tree, node) {
             var bracketNode = tree.addNode(node.key, 'bracket-' + result.leftBracket);
             tree.addNode(bracketNode.key, middlepart);
         } else {
-            node.content = result.message;
+            // node.content = result.message;
         }
-
-        // var bracket = createNode('bracket-' + bra, '', tree);
-        // var middle = createNode('leaf', middlepart, tree);
-        // if (middlepart === ' ') { // e.g. indefinite integral
-        //     middle.type = 'empty';
-        // }
-        // // first connection
-        // this.children.push(bracket.id);
-
-        // bracket.parent = this.id;
-        // // second connection
-        // bracket.children.push(middle.id);
-        // middle.parent = bracket.id;
-
-
-        stop = true;
-    } while (stop === false)
+        return result.message;
 }   
