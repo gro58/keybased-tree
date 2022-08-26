@@ -1,4 +1,4 @@
-import waitforClickModule from './waitForClick.js';
+// import waitforClickModule from './waitForClick.js';
 
 /**
  * 
@@ -47,7 +47,7 @@ function findLeftmostBracket(haystack) {
         //default: no improvement
     }
 
-    console.log(Array(20 + 1).join("-"));
+    // console.log(Array(20 + 1).join("-"));
     console.log(haystack);
     //look for different types of brackets
     //and improve position if better (smaller but not -1)

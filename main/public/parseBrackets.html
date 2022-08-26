@@ -10,7 +10,7 @@
     <link rel="icon" href="./favicon.ico">
     <script src='build/bundle.js'></script>
     <script>
-        console.log('version (from package.json) ', bridge.version);
+        // console.log('version (from package.json) ', bridge.version);
         var tree;
         // TODO get rid of global vars
         document.addEventListener("DOMContentLoaded", function () {
@@ -58,22 +58,30 @@
 
         async function loop() {
             var root = tree['root'];
+            var stop = false;
             do {
                 updateTree();
                 // waitForClick needs init with waitforClickModule.setButtonId('...');
                 await bridge.waitforClickModule.waitForClick();
-                console.log('next step');
-                var resultMessage = bridge.analyzeNodeBrackets(tree, root);
+                // console.log('next step');
+                console.log(Array(20 + 1).join("-"));
+                bridge.analyzeNodeBrackets(tree, root).then(
+                    (result) => {
+                        console.log(result);
+                        stop = result !== 'OK';
+                    }
+                );
                 // } while (resultMessage === 'OK');
-                console.log(resultMessage);
-                console.log(resultMessage['PromiseResult']);
-            } while (true);
+            } while (!stop);
+            return 'loopEnd';
         }
 
         function handleSelect() {
             var latex = document.getElementById("latexId").value;
             tree = bridge.createTree(latex);
-            loop();
+            loop().then((result) => {
+                console.log('loop', result);
+            });
         }
     </script>
 </head>
