@@ -1,34 +1,32 @@
 // https://stackoverflow.com/questions/51374649/using-async-functions-to-await-user-input-from-onclick
 export var waitforClickModule = (function () {
-    var buttonElement, classList, outputElement;
-
-    function isClicked() {
-        return classList.contains('clicked');
-    }
+    var clicked = false;
+    var buttonElement, outputElement;
 
     const timeout = async ms => new Promise(res => setTimeout(res, ms));
 
     return {
         setButtonId: function (buttonElementId) {
             buttonElement = document.getElementById(buttonElementId);
-            classList = buttonElement.classList;
             // eslint-disable-next-line no-unused-vars
             buttonElement.onclick = function clickEventHandler(ev) {
-                classList.add('clicked');
+                clicked = true;
             }
-        },
-        setOutputElementId: function (outputElementId) {
-            outputElement = document.getElementById(outputElementId);
         },
         waitForClick: async function () {
             // pauses script
-            while (isClicked() === false) {
+            while (clicked === false) {
                 await timeout(50);
                 // console.log('waiting');
             }
             // console.log('clicked');
-            classList.remove('clicked'); // reset var
+            clicked = false; // reset var
         },
+        // necessary only for demo
+        setOutputElementId: function (outputElementId) {
+            outputElement = document.getElementById(outputElementId);
+        },
+        // optional
         demo: async function () {
             var i = 0;
             while (i <= 2) {
