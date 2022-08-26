@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <title>keybased-tree - waitForClick demo</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='./css/keybasedTree.css'>
+    <script src='build/bundle.js'></script>
+    <script type="module">
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("DOM is loaded");
+            document.querySelector('#versioninfo').innerHTML = bridge.version;
+            var clickWait = bridge.waitforClickModule; //bridge access via bundle.js
+            clickWait.setButtonId('myButton');
+            var outputElement = document.getElementById('out');
+            // clickWait.setOutputElementId('out');
+            var demo = async function () {
+                var i = 0;
+                while (i <= 5) {
+                    outputElement.innerHTML = i;
+                    await clickWait.waitForClick();
+                    i++;
+                }
+                // next lines cannot be placed after demo()!
+                outputElement.innerHTML = 'End';
+                document.getElementById('myButton').style.display = 'none';
+            }
+            demo();
+            console.log('after demo has been started');
+        });
+    </script>
+</head>
+
+<body class="keybased-tree">
+    <nav>
+        <a href="./index.html">Home</a>
+        <a href="./editTree.html">Edit Tree</a>
+        <a href="./viewTree.html">View tree</a>
+        <a href="./testWithAllLeafs.html">Test withAllLeafs</a>
+        <a href="./searchBrackets.html">Search Brackets</a>
+        <a href="./parseBrackets.html">Parse Brackets</a>
+        <a href="./license.html">License</a>
+    </nav>
+    <h1>keybased-tree</h1>
+    <h2>waitForClick demo version 2</h2>
+    <h3>Wait for mouseclick with async/await</h3>
+    <p>Version: <span id="versioninfo">version</span></p>
+    <hr>
+    <div>
+        <p id='out'></p>
+    </div>
+    <button type="button" id='myButton' style='display:inline-block'>Next Step</button>
+
+    <hr>
+    <div class="see_also"><span id="icons8"><a target="_blank"
+                href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
+                class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a
+                target="_blank" href="https://icons8.com"
+                class="fdm__copy-html-content fdm__copy-html-content-link">Icons8</a></span></div>
+</body>
+
+</html>

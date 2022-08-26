@@ -7,6 +7,7 @@ import { version } from '../package.json';
 // for LaTeX parser
 import createTexStrings from './js/createLatexTestStrings.js';
 import { findOutmostBracketPair, analyzeNodeBrackets } from './js/parseBrackets.js';
+import { waitforClickModule } from './js/waitForClick.js';
 
 
 // after import of bundle, using <script src='build/bundle.js'></script>,
@@ -19,7 +20,8 @@ export {
     demoTree,
     createTexStrings,
     findOutmostBracketPair,
-    analyzeNodeBrackets
+    analyzeNodeBrackets,
+    waitforClickModule
 };
 
 window.onload = function () {
