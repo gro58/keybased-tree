@@ -361,7 +361,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.38";
+    var version = "0.1.40";
 
     /**
      * create an array of LaTeX strings with brackets for test purposes
@@ -542,7 +542,7 @@ var bridge = (function (exports) {
         }
     }
 
-    async function analyzeNodeBrackets(tree, node) {
+    async function decomposeNodeBrackets(tree, node) {
             var content = node.content;
             var result = findOutmostBracketPair(content);
             // console.log(result);
@@ -616,11 +616,11 @@ var bridge = (function (exports) {
         return true;
     }
 
-    exports.analyzeNodeBrackets = analyzeNodeBrackets;
     exports.config = config;
     exports.createTexStrings = createTexStrings;
     exports.createTree = createTree;
     exports.createTreeFromJson = createTreeFromJson;
+    exports.decomposeNodeBrackets = decomposeNodeBrackets;
     exports.demoTree = demoTree;
     exports.findOutmostBracketPair = findOutmostBracketPair;
     exports.mainIsLoaded = mainIsLoaded;

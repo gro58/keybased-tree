@@ -155,7 +155,7 @@ export function findOutmostBracketPair(haystack) {
     }
 }
 
-export async function analyzeNodeBrackets(tree, node) {
+export async function decomposeNodeBrackets(tree, node) {
         var content = node.content;
         var result = findOutmostBracketPair(content);
         // console.log(result);

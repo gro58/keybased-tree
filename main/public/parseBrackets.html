@@ -31,7 +31,7 @@
             handleSelect();
         });
 
-        function updateTree() {
+        function updateTree(tree) {
             var collect = '';
             var logNodeWithDashes = function (level, currentNode) {
                 var dashes = Array(level + 1).join("--");
@@ -52,36 +52,46 @@
         // function nextStep() {
         //     console.log('next step');
         //     var root = tree['root'];
-        //     bridge.analyzeNodeBrackets(tree, root);
+        //     bridge.decomposeNodeBrackets(tree, root);
         //     updateTree();
         // }
 
-        async function loop() {
-            var root = tree['root'];
+        function handleSelect() {
+            var latex = document.getElementById("latexId").value;
+            decomposeRoot(latex);
+        }
+
+        async function decomposeRoot(latex) {
+            await bridge.waitforClickModule.waitForClick();
+            tree = bridge.createTree(latex);
+            var rootNode = tree['root'];
+            // decomposeAllBrackets is async and returns a Promise -> continue with then...
+            decomposeAllBrackets(tree, rootNode).then((result) => {
+                console.log('decomposeAllBrackets:', result);
+            });
+        }
+
+        async function decomposeAllBrackets(tree, node) {
+            // var root = tree['root'];
             var stop = false;
+            updateTree(tree);
             do {
-                updateTree();
                 // waitForClick needs init with waitforClickModule.setButtonId('...');
                 await bridge.waitforClickModule.waitForClick();
-                // console.log('next step');
-                console.log(Array(20 + 1).join("-"));
-                bridge.analyzeNodeBrackets(tree, root).then(
+                bridge.decomposeNodeBrackets(tree, node).then(
                     (result) => {
-                        console.log(result);
-                        stop = result !== 'OK';
+                        if (result === 'OK') {
+                            updateTree(tree);
+                            console.log(result);
+                            console.log(Array(20 + 1).join("-"));
+                        } else {
+                            stop = true;
+                        }
                     }
                 );
                 // } while (resultMessage === 'OK');
             } while (!stop);
-            return 'loopEnd';
-        }
-
-        function handleSelect() {
-            var latex = document.getElementById("latexId").value;
-            tree = bridge.createTree(latex);
-            loop().then((result) => {
-                console.log('loop', result);
-            });
+            return 'End';
         }
     </script>
 </head>
@@ -100,12 +110,13 @@
     <h2>Parse brackets</h2>
     <!-- <h2>livereload active</h2> -->
     <p>Version: <span id="versioninfo">version</span></p>
-    <h3>Array of LaTeX test strings created by function createTexStrings() defined in <a
-            href="../src/js/createLatexTestStrings.js">createLatexTestStrings.js</a>
+    <h3>Array of LaTeX test strings from createTexStrings(), see
+    <a href="../src/js/createLatexTestStrings.js">createLatexTestStrings.js</a>
     </h3>
     <label for="latex">Choose a LaTeX string:</label>
     <select name="latex" id="latexId" onChange="handleSelect()"></select>
-    <h3>View tree</h3>
+    <hr>
+    <!-- <h3>View tree</h3> -->
     <textarea id="outarea_root2leafs" cols='60' rows='15'>This is line one.&#13;&#10;This is line two.</textarea>
     <!-- <div><input type="button" onclick="nextStep()" value="Next Step"></div> -->
     <div><button type="button" id='nextStepButton' style='display:inline-block'>Next Step</button></div>
