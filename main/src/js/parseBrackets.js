@@ -73,7 +73,7 @@ function findLeftmostBracket(haystack) {
  * leftpos = position of first accurence of left bracket
  * rightpos = position of corresponding(!) right bracket     
  */
-export function findOutmostBracketPair(haystack) {
+export function findLeftmostBracketPair(haystack) {
     var leftResult = findLeftmostBracket(haystack);
 
     var message = 'OK';
@@ -155,19 +155,42 @@ export function findOutmostBracketPair(haystack) {
     }
 }
 
-export async function decomposeNodeBrackets(tree, node) {
-        var content = node.content;
-        var result = findOutmostBracketPair(content);
-        // console.log(result);
-        if (result.message === 'OK') {
-            var leftpart = content.substring(0, result.leftPos);
-            var middlepart = content.substring(result.leftPos + result.leftBracket.length, result.rightPos);
-            var rightpart = content.substring(result.rightPos + result.rightBracket.length);
-            node.content = leftpart + '§' + rightpart;
-            var bracketNode = tree.addNode(node.key, 'bracket-' + result.leftBracket);
-            tree.addNode(bracketNode.key, middlepart);
-        } else {
-            // node.content = result.message;
-        }
-        return result.message;
-}   
+/**
+ * 
+ * @param {*} tree - keybased tree object
+ * @param {*} node - node of tree containing bracket(s)
+ * @param {*} mode - if mode==='single, decompose single leftmost bracket
+ * else decompose all brackets of node but no inner brackets
+ * @returns 
+ */
+export async function decomposeNodeBrackets(tree, node, mode) {
+    if(mode === 'single'){
+        return decomposeSingleNodeBracket(tree, node);
+    } else {
+        return decomposeAllNodeBrackets(tree, node)
+    }
+}
+
+function decomposeSingleNodeBracket(tree, node) {
+    var content = node.content;
+    var result = findLeftmostBracketPair(content);
+    // console.log(result);
+    if (result.message === 'OK') {
+        var leftpart = content.substring(0, result.leftPos);
+        var middlepart = content.substring(result.leftPos + result.leftBracket.length, result.rightPos);
+        var rightpart = content.substring(result.rightPos + result.rightBracket.length);
+        node.content = leftpart + '§' + rightpart;
+        var bracketNode = tree.addNode(node.key, 'bracket-' + result.leftBracket);
+        tree.addNode(bracketNode.key, middlepart);
+    } else {
+        // node.content = result.message;
+    }
+    return result.message;
+}
+
+function decomposeAllNodeBrackets(tree, node) {
+    do {
+        var result = decomposeSingleNodeBracket(tree, node);
+    } while (result === 'OK');
+    return result;
+}

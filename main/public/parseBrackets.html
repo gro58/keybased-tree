@@ -16,7 +16,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
             document.querySelector('#versioninfo').innerHTML = bridge.version;
-            bridge.waitforClickModule.setButtonId('nextStepButton')
+            // bridge.waitforClickModule.setButtonId('nextStepButton');
 
             var testArray = bridge.createTexStrings();
             var temp = document.querySelector('#latexId').innerHTML;
@@ -61,37 +61,76 @@
             decomposeRoot(latex);
         }
 
+        // async function decomposeTree(latex) {
+        //     await bridge.waitforClickModule.waitForClick();
+        //     tree = bridge.createTree(latex);
+        //     var node = tree['root'];
+        //     tree.withAllLeafs(function (level, node) {
+        //         // decomposeAllBrackets is async and returns a Promise -> continue with then...
+        //         decomposeAllBrackets(tree, node).then((result) => {
+        //             console.log('decomposeAllBrackets:', result);
+        //         });
+        //     });
+        // }
+
         async function decomposeRoot(latex) {
-            await bridge.waitforClickModule.waitForClick();
+            ErrorMessage('');
+            // await bridge.waitforClickModule.waitForClick();
             tree = bridge.createTree(latex);
+            updateTree(tree);
             var rootNode = tree['root'];
-            // decomposeAllBrackets is async and returns a Promise -> continue with then...
-            decomposeAllBrackets(tree, rootNode).then((result) => {
-                console.log('decomposeAllBrackets:', result);
+            // var mode = 'single'; 
+            var mode = 'all'; 
+            // decomposeNodeBrackets is async and returns a Promise -> continue with .then(...
+            bridge.decomposeNodeBrackets(tree, rootNode, mode).then((result) => {
+                console.log('decomposeNodeBrackets mode=',mode, result);
+                if (mode !== 'single'){
+                    if (result ==='no left bracket'){
+                        result = 'OK';
+                    }
+                }
+                if(result !== 'OK'){
+                    ErrorMessage(result);
+                }
+                updateTree(tree);
             });
         }
 
-        async function decomposeAllBrackets(tree, node) {
-            // var root = tree['root'];
-            var stop = false;
-            updateTree(tree);
-            do {
-                // waitForClick needs init with waitforClickModule.setButtonId('...');
-                await bridge.waitforClickModule.waitForClick();
-                bridge.decomposeNodeBrackets(tree, node).then(
-                    (result) => {
-                        if (result === 'OK') {
-                            updateTree(tree);
-                            console.log(result);
-                            console.log(Array(20 + 1).join("-"));
-                        } else {
-                            stop = true;
-                        }
-                    }
-                );
-                // } while (resultMessage === 'OK');
-            } while (!stop);
-            return 'End';
+        // async function decomposeAllBrackets(tree) {
+        //     // var root = tree['root'];
+        //     tree.withAllLeafs(async function (level, node) {
+        //         var stop = false;
+        //         updateTree(tree);
+        //         do {
+        //             // waitForClick needs init with waitforClickModule.setButtonId('...');
+        //             // await bridge.waitforClickModule.waitForClick();
+        //             console.log('now decomposing ', node.content);
+        //             bridge.decomposeNodeBrackets(tree, node).then(
+        //                 (result) => {
+        //                     if (result === 'OK') {
+        //                         updateTree(tree);
+        //                         console.log(result);
+        //                         console.log(Array(20 + 1).join("-"));
+        //                     } else {
+        //                         stop = true;
+        //                     }
+        //                 }
+        //             );
+        //             // } while (resultMessage === 'OK');
+        //         } while (!stop);
+        //     });
+        //     return 'End';
+        // }
+
+        function ErrorMessage(message) {
+            var errorElement = document.getElementById('errormessage');
+            if (message.length > 0) {
+                errorElement.innerHTML = message;
+                // https://www.w3schools.com/howto/howto_js_add_class.asp
+                errorElement.classList.add("active");
+            } else {
+                errorElement.classList.remove("active");
+            }
         }
     </script>
 </head>
@@ -111,16 +150,13 @@
     <!-- <h2>livereload active</h2> -->
     <p>Version: <span id="versioninfo">version</span></p>
     <h3>Array of LaTeX test strings from createTexStrings(), see
-    <a href="../src/js/createLatexTestStrings.js">createLatexTestStrings.js</a>
+        <a href="../src/js/createLatexTestStrings.js">createLatexTestStrings.js</a>
     </h3>
     <label for="latex">Choose a LaTeX string:</label>
     <select name="latex" id="latexId" onChange="handleSelect()"></select>
-    <hr>
-    <!-- <h3>View tree</h3> -->
-    <textarea id="outarea_root2leafs" cols='60' rows='15'>This is line one.&#13;&#10;This is line two.</textarea>
-    <!-- <div><input type="button" onclick="nextStep()" value="Next Step"></div> -->
-    <div><button type="button" id='nextStepButton' style='display:inline-block'>Next Step</button></div>
-
+    <p id="errormessage" class="active">dummy error</p>
+    <textarea id="outarea_root2leafs" cols='60' rows='15'>Select LaTeX string for root node&#13;&#10;Then press button.</textarea>
+    <!-- <div><button type="button" id='nextStepButton' style='display:inline-block'>Next Step</button></div> -->
     <hr>
     <div class="see_also"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
             class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a

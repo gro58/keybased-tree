@@ -6,7 +6,7 @@ import { demoTree } from './js/CreateDemoTree.js';
 import { version } from '../package.json';
 // for LaTeX parser
 import createTexStrings from './js/createLatexTestStrings.js';
-import { findOutmostBracketPair, decomposeNodeBrackets } from './js/parseBrackets.js';
+import { findLeftmostBracketPair, decomposeNodeBrackets} from './js/parseBrackets.js';
 import { waitforClickModule } from './js/waitForClick.js';
 
 
@@ -19,7 +19,7 @@ export {
     version,
     demoTree,
     createTexStrings,
-    findOutmostBracketPair,
+    findLeftmostBracketPair,
     decomposeNodeBrackets,
     waitforClickModule
 };

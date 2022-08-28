@@ -27,7 +27,7 @@
                 var texString = testArray[i];
                 var preface = i + ': ';
                 document.querySelector('#in').textContent = preface + texString;
-                var result = bridge.findOutmostBracketPair(texString);
+                var result = bridge.findLeftmostBracketPair(texString);
                 var leftDashes = Array(result.leftPos + 1).join('-');
                 var rightDashes = Array(result.rightPos + 1).join('-');
                 document.querySelector('#outleft').textContent = preface + leftDashes + result.leftBracket;

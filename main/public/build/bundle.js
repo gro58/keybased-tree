@@ -361,7 +361,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.40";
+    var version = "0.1.42";
 
     /**
      * create an array of LaTeX strings with brackets for test purposes
@@ -460,7 +460,7 @@ var bridge = (function (exports) {
      * leftpos = position of first accurence of left bracket
      * rightpos = position of corresponding(!) right bracket     
      */
-    function findOutmostBracketPair(haystack) {
+    function findLeftmostBracketPair(haystack) {
         var leftResult = findLeftmostBracket(haystack);
 
         var message = 'OK';
@@ -542,19 +542,42 @@ var bridge = (function (exports) {
         }
     }
 
-    async function decomposeNodeBrackets(tree, node) {
-            var content = node.content;
-            var result = findOutmostBracketPair(content);
-            // console.log(result);
-            if (result.message === 'OK') {
-                var leftpart = content.substring(0, result.leftPos);
-                var middlepart = content.substring(result.leftPos + result.leftBracket.length, result.rightPos);
-                var rightpart = content.substring(result.rightPos + result.rightBracket.length);
-                node.content = leftpart + '§' + rightpart;
-                var bracketNode = tree.addNode(node.key, 'bracket-' + result.leftBracket);
-                tree.addNode(bracketNode.key, middlepart);
-            }
-            return result.message;
+    /**
+     * 
+     * @param {*} tree - keybased tree object
+     * @param {*} node - node of tree containing bracket(s)
+     * @param {*} mode - if mode==='single, decompose single leftmost bracket
+     * else decompose all brackets of node but no inner brackets
+     * @returns 
+     */
+    async function decomposeNodeBrackets(tree, node, mode) {
+        if(mode === 'single'){
+            return decomposeSingleNodeBracket(tree, node);
+        } else {
+            return decomposeAllNodeBrackets(tree, node)
+        }
+    }
+
+    function decomposeSingleNodeBracket(tree, node) {
+        var content = node.content;
+        var result = findLeftmostBracketPair(content);
+        // console.log(result);
+        if (result.message === 'OK') {
+            var leftpart = content.substring(0, result.leftPos);
+            var middlepart = content.substring(result.leftPos + result.leftBracket.length, result.rightPos);
+            var rightpart = content.substring(result.rightPos + result.rightBracket.length);
+            node.content = leftpart + '§' + rightpart;
+            var bracketNode = tree.addNode(node.key, 'bracket-' + result.leftBracket);
+            tree.addNode(bracketNode.key, middlepart);
+        }
+        return result.message;
+    }
+
+    function decomposeAllNodeBrackets(tree, node) {
+        do {
+            var result = decomposeSingleNodeBracket(tree, node);
+        } while (result === 'OK');
+        return result;
     }
 
     // https://stackoverflow.com/questions/51374649/using-async-functions-to-await-user-input-from-onclick
@@ -622,7 +645,7 @@ var bridge = (function (exports) {
     exports.createTreeFromJson = createTreeFromJson;
     exports.decomposeNodeBrackets = decomposeNodeBrackets;
     exports.demoTree = demoTree;
-    exports.findOutmostBracketPair = findOutmostBracketPair;
+    exports.findLeftmostBracketPair = findLeftmostBracketPair;
     exports.mainIsLoaded = mainIsLoaded;
     exports.version = version;
     exports.waitforClickModule = waitforClickModule;
