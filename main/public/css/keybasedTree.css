@@ -1,14 +1,20 @@
+body.keybased-tree img#logo {
+    transform: translate(0.5em, 0.4em);
+}
+
 body.keybased-tree h3 {
     background-color: beige;
     font-weight: normal;
 }
 
-body.keybased-tree p#errormessage{
-    display: none;
+body.keybased-tree p#message {
+    /* display: none; */
+    display: inherit;
+    color: green;
 }
 
-body.keybased-tree p#errormessage.active{
-    display:inherit;
+body.keybased-tree p#errormessage.error {
+    display: inherit;
     color: red;
 }
 
@@ -18,7 +24,7 @@ body.keybased-tree .column {
 }
 
 /* Remove default bullets */
-body.keybased-tree ul#outarea{
+body.keybased-tree ul#outarea {
     list-style-type: none;
 }
 
@@ -52,7 +58,10 @@ div.see_also {
     font-style: italic;
 }
 
-p span#in, p span#out, p span#outleft, p span#outright {
+p span#in,
+p span#out,
+p span#outleft,
+p span#outright {
     font-family: 'Console', Courier, monospace;
     font-size: smaller;
 }

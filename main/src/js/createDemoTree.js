@@ -18,42 +18,27 @@ export function demoTree() {
     var t = tree.addNode(s.key, "content-T");
     var a2 = tree.addNode(y.key, "content-A");
     var c = tree.addNode(y.key, "content-C");
+
     // removing nodes -testcase
-    // var removedNodeOrErrorMessage;
-    // removedNodeOrErrorMessage=tree.remove('dummy-key');
-    // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
-    //     console.log('removed:', removedNodeOrErrorMessage.content);
-    // } else {
-    //     console.log('error:', removedNodeOrErrorMessage);
-    // }
-    // removedNodeOrErrorMessage=tree.remove(s.key);
-    // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
-    //     console.log('removed:', removedNodeOrErrorMessage.content);
-    // } else {
-    //     console.log('error:', removedNodeOrErrorMessage);
-    // }
-    // removedNodeOrErrorMessage=tree.remove(e.key);
-    // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
-    //     console.log('removed:', removedNodeOrErrorMessage.content);
-    // } else {
-    //     console.log('error:', removedNodeOrErrorMessage);
-    // }
-    // removedNodeOrErrorMessage=tree.remove('root');
-    // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
-    //     console.log('removed:', removedNodeOrErrorMessage.content);
-    // } else {
-    //     console.log('error:', removedNodeOrErrorMessage);
-    // }
-    // removedNodeOrErrorMessage=tree.remove(y.key);
-    // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
-    //     console.log('removed:', removedNodeOrErrorMessage.content);
-    // } else {
-    //     console.log('error:', removedNodeOrErrorMessage);
-    // }
+    function removeNode(tree, key) {
+        var removedNodeOrErrorMessage = tree.remove(key);
+        if (typeof removedNodeOrErrorMessage.key !== 'undefined') {
+            console.log('removed:', removedNodeOrErrorMessage.content);
+        } else {
+            console.log('error:', removedNodeOrErrorMessage);
+        }
+    }
+
+    // removeNode(tree, 'dummy-key');
+    // removeNode(tree, s.key);
+    // removeNode(tree, e.key);
+    // removeNode(tree, 'root');
+    // removeNode(tree, y.key);
+
     // insertOver - testcase
-    var k = tree.insertOver(c.key, 'Insert-K');
+    var k = tree.insertOver(c.key, 'content-K');
     console.log('inserted:', k);
-    var b = tree.insertOver(t.key, 'Insert-B');
+    var b = tree.insertOver(t.key, 'content-B');
     console.log('inserted:', b);
     return tree;
 }

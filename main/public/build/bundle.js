@@ -321,47 +321,22 @@ var bridge = (function (exports) {
         var t = tree.addNode(s.key, "content-T");
         tree.addNode(y.key, "content-A");
         var c = tree.addNode(y.key, "content-C");
-        // removing nodes -testcase
-        // var removedNodeOrErrorMessage;
-        // removedNodeOrErrorMessage=tree.remove('dummy-key');
-        // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
-        //     console.log('removed:', removedNodeOrErrorMessage.content);
-        // } else {
-        //     console.log('error:', removedNodeOrErrorMessage);
-        // }
-        // removedNodeOrErrorMessage=tree.remove(s.key);
-        // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
-        //     console.log('removed:', removedNodeOrErrorMessage.content);
-        // } else {
-        //     console.log('error:', removedNodeOrErrorMessage);
-        // }
-        // removedNodeOrErrorMessage=tree.remove(e.key);
-        // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
-        //     console.log('removed:', removedNodeOrErrorMessage.content);
-        // } else {
-        //     console.log('error:', removedNodeOrErrorMessage);
-        // }
-        // removedNodeOrErrorMessage=tree.remove('root');
-        // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
-        //     console.log('removed:', removedNodeOrErrorMessage.content);
-        // } else {
-        //     console.log('error:', removedNodeOrErrorMessage);
-        // }
-        // removedNodeOrErrorMessage=tree.remove(y.key);
-        // if( typeof removedNodeOrErrorMessage.key !== 'undefined') {
-        //     console.log('removed:', removedNodeOrErrorMessage.content);
-        // } else {
-        //     console.log('error:', removedNodeOrErrorMessage);
-        // }
+
+        // removeNode(tree, 'dummy-key');
+        // removeNode(tree, s.key);
+        // removeNode(tree, e.key);
+        // removeNode(tree, 'root');
+        // removeNode(tree, y.key);
+
         // insertOver - testcase
-        var k = tree.insertOver(c.key, 'Insert-K');
+        var k = tree.insertOver(c.key, 'content-K');
         console.log('inserted:', k);
-        var b = tree.insertOver(t.key, 'Insert-B');
+        var b = tree.insertOver(t.key, 'content-B');
         console.log('inserted:', b);
         return tree;
     }
 
-    var version = "0.1.42";
+    var version = "0.1.45";
 
     /**
      * create an array of LaTeX strings with brackets for test purposes
@@ -411,7 +386,7 @@ var bridge = (function (exports) {
             // remember kind of bracket corresponding to best position
             if (improvement) {
                 found = needle;
-                console.log('improvement: found ' + needle + ' at position ' + bestPos);
+                // console.log('improvement: found ' + needle + ' at position ' + bestPos);
             }
         }
 
@@ -551,17 +526,20 @@ var bridge = (function (exports) {
      * @returns 
      */
     async function decomposeNodeBrackets(tree, node, mode) {
-        if(mode === 'single'){
+        if (mode === 'single') {
             return decomposeSingleNodeBracket(tree, node);
         } else {
-            return decomposeAllNodeBrackets(tree, node)
+            do {
+                var result = decomposeSingleNodeBracket(tree, node);
+            } while (result === 'OK');
+            return "End";
         }
     }
 
     function decomposeSingleNodeBracket(tree, node) {
         var content = node.content;
         var result = findLeftmostBracketPair(content);
-        // console.log(result);
+        console.log(result.message, result.leftBracket);
         if (result.message === 'OK') {
             var leftpart = content.substring(0, result.leftPos);
             var middlepart = content.substring(result.leftPos + result.leftBracket.length, result.rightPos);
@@ -571,13 +549,6 @@ var bridge = (function (exports) {
             tree.addNode(bracketNode.key, middlepart);
         }
         return result.message;
-    }
-
-    function decomposeAllNodeBrackets(tree, node) {
-        do {
-            var result = decomposeSingleNodeBracket(tree, node);
-        } while (result === 'OK');
-        return result;
     }
 
     // https://stackoverflow.com/questions/51374649/using-async-functions-to-await-user-input-from-onclick

@@ -16,7 +16,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
             document.querySelector('#versioninfo').innerHTML = bridge.version;
-            // bridge.waitforClickModule.setButtonId('nextStepButton');
+            bridge.waitforClickModule.setButtonId('nextStepButton');
 
             var testArray = bridge.createTexStrings();
             var temp = document.querySelector('#latexId').innerHTML;
@@ -58,79 +58,84 @@
 
         function handleSelect() {
             var latex = document.getElementById("latexId").value;
-            decomposeRoot(latex);
+            var RadioButtons = document.getElementsByName('single_or_all');
+            console.clear();
+            // console.log(RadioButtons);
+            var mode;
+            for (var i = 0; i < RadioButtons.length; i++) {
+                var button = RadioButtons[i];
+                if (button.checked) {
+                    mode = button.id;
+                };
+            }
+            console.log('mode', mode);
+            switch (mode) {
+                case 'single':
+                    decomposeRoot(latex, mode);
+                    break;
+                case 'all':
+                    decomposeRoot(latex, mode);
+                    break;
+                case 'tree':
+                    decomposeTree(latex);
+                    break;
+                default:
+                    console.error('case error');
+            }
         }
 
-        // async function decomposeTree(latex) {
-        //     await bridge.waitforClickModule.waitForClick();
-        //     tree = bridge.createTree(latex);
-        //     var node = tree['root'];
-        //     tree.withAllLeafs(function (level, node) {
-        //         // decomposeAllBrackets is async and returns a Promise -> continue with then...
-        //         decomposeAllBrackets(tree, node).then((result) => {
-        //             console.log('decomposeAllBrackets:', result);
-        //         });
-        //     });
-        // }
-
-        async function decomposeRoot(latex) {
-            ErrorMessage('');
+        async function decomposeRoot(latex, mode) {
+            Message('');
             // await bridge.waitforClickModule.waitForClick();
             tree = bridge.createTree(latex);
             updateTree(tree);
             var rootNode = tree['root'];
-            // var mode = 'single'; 
-            var mode = 'all'; 
             // decomposeNodeBrackets is async and returns a Promise -> continue with .then(...
             bridge.decomposeNodeBrackets(tree, rootNode, mode).then((result) => {
-                console.log('decomposeNodeBrackets mode=',mode, result);
-                if (mode !== 'single'){
-                    if (result ==='no left bracket'){
-                        result = 'OK';
-                    }
-                }
-                if(result !== 'OK'){
-                    ErrorMessage(result);
-                }
+                Message(result);
                 updateTree(tree);
             });
         }
 
-        // async function decomposeAllBrackets(tree) {
-        //     // var root = tree['root'];
-        //     tree.withAllLeafs(async function (level, node) {
-        //         var stop = false;
-        //         updateTree(tree);
-        //         do {
-        //             // waitForClick needs init with waitforClickModule.setButtonId('...');
-        //             // await bridge.waitforClickModule.waitForClick();
-        //             console.log('now decomposing ', node.content);
-        //             bridge.decomposeNodeBrackets(tree, node).then(
-        //                 (result) => {
-        //                     if (result === 'OK') {
-        //                         updateTree(tree);
-        //                         console.log(result);
-        //                         console.log(Array(20 + 1).join("-"));
-        //                     } else {
-        //                         stop = true;
-        //                     }
-        //                 }
-        //             );
-        //             // } while (resultMessage === 'OK');
-        //         } while (!stop);
-        //     });
-        //     return 'End';
-        // }
+        async function decomposeTree(latex) {
+            tree = bridge.createTree(latex);
+            var node = tree['root'];
+            debugger;
+            tree.withAllLeafs(async function (level, node) {
+                var stop = false;
+                updateTree(tree);
+                var emergency = 0;
+                do {
+                    // waitForClick needs init with waitforClickModule.setButtonId('...');
+                    // await bridge.waitforClickModule.waitForClick();
+                    console.log('now decomposing ', node.content);
+                    bridge.decomposeNodeBrackets(tree, node, 'single').then(
+                        (result) => {
+                            if (result === 'OK') {
+                                // updateTree(tree);
+                                console.log(result);
+                                console.log(Array(20 + 1).join("-"));
+                            } else {
+                                stop = true;
+                            }
+                        }
+                    );
+                    emergency++;
+                    if (emergency > 1000) { stop = true; }
+                } while (!stop);
+            });
+            return 'End';
+        }
 
-        function ErrorMessage(message) {
-            var errorElement = document.getElementById('errormessage');
-            if (message.length > 0) {
-                errorElement.innerHTML = message;
-                // https://www.w3schools.com/howto/howto_js_add_class.asp
-                errorElement.classList.add("active");
+        function Message(message) {
+            var messageElement = document.getElementById('message');
+            // https://www.w3schools.com/howto/howto_js_add_class.asp
+            if (message === 'OK' || message === 'End') {
+                messageElement.classList.remove("error");
             } else {
-                errorElement.classList.remove("active");
+                messageElement.classList.add("error");
             }
+            messageElement.innerHTML = message;
         }
     </script>
 </head>
@@ -145,18 +150,32 @@
         <a class="selected">Parse Brackets</a>
         <a href="./license.html">License</a>
     </nav>
-    <h1>keybased-tree</h1>
+    <h1>keybased-tree<img id='logo' src='./keybasedTree_48x48.gif'></h1>
     <h2>Parse brackets</h2>
     <!-- <h2>livereload active</h2> -->
     <p>Version: <span id="versioninfo">version</span></p>
     <h3>Array of LaTeX test strings from createTexStrings(), see
         <a href="../src/js/createLatexTestStrings.js">createLatexTestStrings.js</a>
     </h3>
+    <form>
+        <!-- <fieldset data-role="controlgroup" data-type="horizontal"> -->
+        <input type="radio" id="single" name="single_or_all" onChange="handleSelect()"/>
+        <label for="single">leftmost bracket of root</label>
+        <input type="radio" id="all" name="single_or_all" onChange="handleSelect()" checked="checked" />
+        <label for="all">all brackets of root</label>
+        <input type="radio" id="tree" name="single_or_all" onChange="handleSelect()"/>
+        <label for="all">tree</label>
+        <!-- </fieldset> -->
+    </form>
     <label for="latex">Choose a LaTeX string:</label>
-    <select name="latex" id="latexId" onChange="handleSelect()"></select>
-    <p id="errormessage" class="active">dummy error</p>
-    <textarea id="outarea_root2leafs" cols='60' rows='15'>Select LaTeX string for root node&#13;&#10;Then press button.</textarea>
-    <!-- <div><button type="button" id='nextStepButton' style='display:inline-block'>Next Step</button></div> -->
+    <div>
+        <p><select name="latex" id="latexId" onChange="handleSelect()"></select></p>
+    </div>
+    <hr>
+    <p id="message" class="active">dummy message</p>
+    <textarea id="outarea_root2leafs" cols='60'
+        rows='15'>Select LaTeX string for root node&#13;&#10;Then press button.</textarea>
+    <div><button type="button" id='nextStepButton' style='display:inline-block'>Next Step</button></div>
     <hr>
     <div class="see_also"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
             class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a

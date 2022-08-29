@@ -24,7 +24,7 @@ function findLeftmostBracket(haystack) {
         // remember kind of bracket corresponding to best position
         if (improvement) {
             found = needle;
-            console.log('improvement: found ' + needle + ' at position ' + bestPos);
+            // console.log('improvement: found ' + needle + ' at position ' + bestPos);
         }
     }
 
@@ -164,17 +164,20 @@ export function findLeftmostBracketPair(haystack) {
  * @returns 
  */
 export async function decomposeNodeBrackets(tree, node, mode) {
-    if(mode === 'single'){
+    if (mode === 'single') {
         return decomposeSingleNodeBracket(tree, node);
     } else {
-        return decomposeAllNodeBrackets(tree, node)
+        do {
+            var result = decomposeSingleNodeBracket(tree, node);
+        } while (result === 'OK');
+        return "End";
     }
 }
 
 function decomposeSingleNodeBracket(tree, node) {
     var content = node.content;
     var result = findLeftmostBracketPair(content);
-    // console.log(result);
+    console.log(result.message, result.leftBracket);
     if (result.message === 'OK') {
         var leftpart = content.substring(0, result.leftPos);
         var middlepart = content.substring(result.leftPos + result.leftBracket.length, result.rightPos);
@@ -186,11 +189,4 @@ function decomposeSingleNodeBracket(tree, node) {
         // node.content = result.message;
     }
     return result.message;
-}
-
-function decomposeAllNodeBrackets(tree, node) {
-    do {
-        var result = decomposeSingleNodeBracket(tree, node);
-    } while (result === 'OK');
-    return result;
 }
