@@ -91,10 +91,13 @@
             updateTree(tree);
             var rootNode = tree['root'];
             // decomposeNodeBrackets is async and returns a Promise -> continue with .then(...
-            bridge.decomposeNodeBrackets(tree, rootNode, mode).then((result) => {
+            // bridge.decomposeNodeBrackets(tree, rootNode, mode).then((result) => {
+            var result = bridge.decomposeNodeBrackets(tree, rootNode, mode);
+            if (mode === 'all' && result === 'no left bracket') {
+                result = 'End';
                 Message(result);
                 updateTree(tree);
-            });
+            };
         }
 
         async function decomposeTree(latex) {
@@ -108,20 +111,18 @@
                 do {
                     // waitForClick needs init with waitforClickModule.setButtonId('...');
                     // await bridge.waitforClickModule.waitForClick();
-                    console.log('now decomposing ', node.content);
-                    bridge.decomposeNodeBrackets(tree, node, 'single').then(
-                        (result) => {
-                            if (result === 'OK') {
-                                // updateTree(tree);
-                                console.log(result);
-                                console.log(Array(20 + 1).join("-"));
-                            } else {
-                                stop = true;
-                            }
-                        }
-                    );
+                    console.log('*** now decomposing ', node.content, emergency);
+                    // var result = bridge.decomposeNodeBrackets(tree, node, 'single');
+                    // console.log('***', result);
+
+                    var result = bridge.decomposeNodeBrackets(tree, node, 'single');
+                    console.log(result);
+                    if (result === 'no left bracket') {
+                        console.log(Array(20 + 1).join("-"));
+                        stop = true;
+                    }
                     emergency++;
-                    if (emergency > 1000) { stop = true; }
+                    if (emergency > 50) { stop = true; }
                 } while (!stop);
             });
             return 'End';
@@ -159,11 +160,11 @@
     </h3>
     <form>
         <!-- <fieldset data-role="controlgroup" data-type="horizontal"> -->
-        <input type="radio" id="single" name="single_or_all" onChange="handleSelect()"/>
+        <input type="radio" id="single" name="single_or_all" onChange="handleSelect()" />
         <label for="single">leftmost bracket of root</label>
         <input type="radio" id="all" name="single_or_all" onChange="handleSelect()" checked="checked" />
         <label for="all">all brackets of root</label>
-        <input type="radio" id="tree" name="single_or_all" onChange="handleSelect()"/>
+        <input type="radio" id="tree" name="single_or_all" onChange="handleSelect()" />
         <label for="all">tree</label>
         <!-- </fieldset> -->
     </form>
@@ -172,7 +173,7 @@
         <p><select name="latex" id="latexId" onChange="handleSelect()"></select></p>
     </div>
     <hr>
-    <p id="message" class="active">dummy message</p>
+    <p id="message">dummy message</p>
     <textarea id="outarea_root2leafs" cols='60'
         rows='15'>Select LaTeX string for root node&#13;&#10;Then press button.</textarea>
     <div><button type="button" id='nextStepButton' style='display:inline-block'>Next Step</button></div>

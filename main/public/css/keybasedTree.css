@@ -13,7 +13,7 @@ body.keybased-tree p#message {
     color: green;
 }
 
-body.keybased-tree p#errormessage.error {
+body.keybased-tree p#message.error {
     display: inherit;
     color: red;
 }

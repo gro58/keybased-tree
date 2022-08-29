@@ -336,7 +336,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.45";
+    var version = "0.1.48";
 
     /**
      * create an array of LaTeX strings with brackets for test purposes
@@ -525,28 +525,31 @@ var bridge = (function (exports) {
      * else decompose all brackets of node but no inner brackets
      * @returns 
      */
-    async function decomposeNodeBrackets(tree, node, mode) {
+    function decomposeNodeBrackets(tree, node, mode) {
         if (mode === 'single') {
-            return decomposeSingleNodeBracket(tree, node);
+            result = decomposeSingleNodeBracket(tree, node);
+            console.log(node.content, mode, result);
+            return result;
         } else {
             do {
                 var result = decomposeSingleNodeBracket(tree, node);
             } while (result === 'OK');
-            return "End";
+            return result;
         }
     }
 
     function decomposeSingleNodeBracket(tree, node) {
         var content = node.content;
         var result = findLeftmostBracketPair(content);
-        console.log(result.message, result.leftBracket);
+        console.log(result.message, result.leftBracket, result.leftPos);
         if (result.message === 'OK') {
             var leftpart = content.substring(0, result.leftPos);
             var middlepart = content.substring(result.leftPos + result.leftBracket.length, result.rightPos);
             var rightpart = content.substring(result.rightPos + result.rightBracket.length);
             node.content = leftpart + '§' + rightpart;
             var bracketNode = tree.addNode(node.key, 'bracket-' + result.leftBracket);
-            tree.addNode(bracketNode.key, middlepart);
+            var added = tree.addNode(bracketNode.key, middlepart);
+            console.log(added);
         }
         return result.message;
     }
