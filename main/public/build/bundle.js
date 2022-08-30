@@ -336,7 +336,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.48";
+    var version = "0.1.51";
 
     /**
      * create an array of LaTeX strings with brackets for test purposes
@@ -360,7 +360,7 @@ var bridge = (function (exports) {
         return test;
     }
 
-    // import waitforClickModule from './waitForClick.js';
+    // import { waitforClickModule } from './waitForClick.js';
 
     /**
      * 
@@ -525,14 +525,18 @@ var bridge = (function (exports) {
      * else decompose all brackets of node but no inner brackets
      * @returns 
      */
-    function decomposeNodeBrackets(tree, node, mode) {
+    async function decomposeNodeBrackets(tree, node, mode) {
+        // console.log('decomposeNodeBrackets', node.content, mode);
         if (mode === 'single') {
             result = decomposeSingleNodeBracket(tree, node);
-            console.log(node.content, mode, result);
             return result;
         } else {
             do {
                 var result = decomposeSingleNodeBracket(tree, node);
+                // if (mode === 'tree') {
+                //     console.log('waitForClick');
+                //     await waitforClickModule.waitForClick();
+                // }
             } while (result === 'OK');
             return result;
         }
@@ -541,7 +545,7 @@ var bridge = (function (exports) {
     function decomposeSingleNodeBracket(tree, node) {
         var content = node.content;
         var result = findLeftmostBracketPair(content);
-        console.log(result.message, result.leftBracket, result.leftPos);
+        // console.log(result.message, result.leftBracket, result.leftPos);
         if (result.message === 'OK') {
             var leftpart = content.substring(0, result.leftPos);
             var middlepart = content.substring(result.leftPos + result.leftBracket.length, result.rightPos);
@@ -549,7 +553,7 @@ var bridge = (function (exports) {
             node.content = leftpart + '§' + rightpart;
             var bracketNode = tree.addNode(node.key, 'bracket-' + result.leftBracket);
             var added = tree.addNode(bracketNode.key, middlepart);
-            console.log(added);
+            console.log(result.leftPos + result.leftBracket, added.content);
         }
         return result.message;
     }

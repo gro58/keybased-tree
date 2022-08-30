@@ -1,4 +1,4 @@
-// import waitforClickModule from './waitForClick.js';
+// import { waitforClickModule } from './waitForClick.js';
 
 /**
  * 
@@ -163,14 +163,18 @@ export function findLeftmostBracketPair(haystack) {
  * else decompose all brackets of node but no inner brackets
  * @returns 
  */
-export function decomposeNodeBrackets(tree, node, mode) {
+export async function decomposeNodeBrackets(tree, node, mode) {
+    // console.log('decomposeNodeBrackets', node.content, mode);
     if (mode === 'single') {
         result = decomposeSingleNodeBracket(tree, node);
-        console.log(node.content, mode, result);
         return result;
     } else {
         do {
             var result = decomposeSingleNodeBracket(tree, node);
+            // if (mode === 'tree') {
+            //     console.log('waitForClick');
+            //     await waitforClickModule.waitForClick();
+            // }
         } while (result === 'OK');
         return result;
     }
@@ -179,7 +183,7 @@ export function decomposeNodeBrackets(tree, node, mode) {
 function decomposeSingleNodeBracket(tree, node) {
     var content = node.content;
     var result = findLeftmostBracketPair(content);
-    console.log(result.message, result.leftBracket, result.leftPos);
+    // console.log(result.message, result.leftBracket, result.leftPos);
     if (result.message === 'OK') {
         var leftpart = content.substring(0, result.leftPos);
         var middlepart = content.substring(result.leftPos + result.leftBracket.length, result.rightPos);
@@ -187,7 +191,7 @@ function decomposeSingleNodeBracket(tree, node) {
         node.content = leftpart + '§' + rightpart;
         var bracketNode = tree.addNode(node.key, 'bracket-' + result.leftBracket);
         var added = tree.addNode(bracketNode.key, middlepart);
-        console.log(added);
+        console.log(result.leftPos + result.leftBracket, added.content);
     } else {
         // node.content = result.message;
     }
