@@ -13,13 +13,16 @@ export var waitforClickModule = (function () {
                 clicked = true;
             }
         },
-        waitForClick: async function () {
+        waitForClick: async function (ifClickedCallback) {
             // pauses script
             while (clicked === false) {
                 await timeout(50);
                 // console.log('waiting');
             }
-            // console.log('clicked');
+            console.log('clicked');
+            if (ifClickedCallback){
+                ifClickedCallback();
+            }
             clicked = false; // reset var
         },
         // necessary only for demo

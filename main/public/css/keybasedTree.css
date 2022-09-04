@@ -48,6 +48,11 @@ body.keybased-tree .row:after {
     clear: both;
 }
 
+/* hide nextStepButton if mode single */
+body.keybased-tree button#nextStepButton.hide {
+    display: none;
+}
+
 nav a.selected {
     background-color: rgb(249, 237, 217);
     color: darkgreen;

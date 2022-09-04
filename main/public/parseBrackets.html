@@ -10,123 +10,135 @@
     <link rel="icon" href="./favicon.ico">
     <script src='build/bundle.js'></script>
     <script>
-        // console.log('version (from package.json) ', bridge.version);
-        var tree;
-        // TODO get rid of global vars
-        document.addEventListener("DOMContentLoaded", function () {
-            console.log("DOM is loaded");
-            document.querySelector('#versioninfo').innerHTML = bridge.version;
-            // bridge.waitforClickModule.setButtonId('nextStepButton');
-
-            var testArray = bridge.createTexStrings();
-            var temp = document.querySelector('#latexId').innerHTML;
-            for (var i = 0; i < testArray.length; i++) {
-                temp += '<option value="';
-                temp += testArray[i];
-                temp += '">';
-                temp += testArray[i];
-                temp += '</option>"';
-            }
-            document.querySelector('#latexId').innerHTML = temp;
-            handleSelect();
-        });
-
-        function updateTree(tree) {
-            var collect = '';
-            var logNodeWithDashes = function (level, currentNode) {
-                var dashes = Array(level + 1).join("--");
-                collect += dashes;
-                collect += currentNode.content;
-                if (currentNode.children.length === 0) {
-                    // https://www.utf8icons.com/character/127811/leaf-fluttering-in-wind
-                    // collect += '&#127811;'
-                    collect += ' \u2618'; //shamrock
+        //iife
+        (function () {
+            // console.log('version (from package.json) ', bridge.version);
+            // iife, no global vars
+            var tree, mode, latex, mouseClicked = false;
+            // var clickWait = bridge.waitforClickModule; //bridge access via bundle.js
+            document.addEventListener("DOMContentLoaded", function () {
+                console.log("DOM is loaded");
+                document.querySelector('#versioninfo').innerHTML = bridge.version;
+                var testArray = bridge.createTexStrings();
+                var temp = document.querySelector('#latexId').innerHTML;
+                for (var i = 0; i < testArray.length; i++) {
+                    temp += '<option value="';
+                    temp += testArray[i];
+                    temp += '">';
+                    temp += testArray[i];
+                    temp += '</option>"';
                 }
-                collect += '&#13;&#10;' //CRLF
-                // console.log(dashes, currentNode.content);
-            };
-            tree.fromRootToLeafs(logNodeWithDashes);
-            document.querySelector('#outarea_root2leafs').innerHTML = collect;
-        }
+                document.querySelector('#latexId').innerHTML = temp;
 
-        function handleSelect() {
-            var latex = document.getElementById("latexId").value;
-            var RadioButtons = document.getElementsByName('single_or_all');
-            console.clear();
-            // console.log(RadioButtons);
-            var mode;
-            for (var i = 0; i < RadioButtons.length; i++) {
-                var button = RadioButtons[i];
-                if (button.checked) {
-                    mode = button.id;
+                // use of addEventListener forced by iife pattern: onClick/onChange sucks
+                // document.getElementById('nextStepButton').addEventListener('click', nextStepHandler);
+                // clickWait.setButtonId('nextStepButton');
+                document.getElementById('single').addEventListener('change', handleSelect);
+                document.getElementById('all').addEventListener('change', handleSelect);
+                document.getElementById('tree').addEventListener('change', handleSelect);
+                document.getElementById('latexId').addEventListener('change', handleSelect);
+                // use default selection
+                handleSelect();
+
+                function handleSelect() {
+                    console.clear();
+                    // console.log('handleSelect');
+                    var RadioButtons = document.getElementsByName('single_or_all');
+                    for (var i = 0; i < RadioButtons.length; i++) {
+                        var button = RadioButtons[i];
+                        if (button.checked) {
+                            mode = button.id;
+                        };
+                    }
+                    // if (mode === 'single' || mode === 'all') {
+                        document.getElementById('nextStepButton').classList.add('hide');
+                    // } else {
+                        // document.getElementById('nextStepButton').classList.remove('hide');
+                    // }
+                    latex = document.getElementById("latexId").value;
+                    switch (mode) {
+                        case 'single':
+                            decomposeRoot(latex, mode);
+                            break;
+                        case 'all':
+                            decomposeRoot(latex, mode);
+                            break;
+                        case 'tree':
+                            decomposeTree(latex);
+                            break;
+                        default:
+                            console.error('case error');
+                    }
+                }
+            });
+
+            // function nextStepHandler(ev) {
+            //     console.log('step');
+            //     mouseClicked = true;
+            // }
+
+            function updateTree(tree) {
+                var collect = '';
+                var logNodeWithDashes = function (level, currentNode) {
+                    var dashes = Array(level + 1).join("--");
+                    collect += dashes;
+                    collect += currentNode.content;
+                    if (currentNode.children.length === 0) {
+                        // https://www.utf8icons.com/character/127811/leaf-fluttering-in-wind
+                        // collect += '&#127811;'
+                        collect += ' \u2618'; //shamrock
+                    }
+                    collect += '&#13;&#10;' //CRLF
+                    // console.log(dashes, currentNode.content);
                 };
+                tree.fromRootToLeafs(logNodeWithDashes);
+                document.querySelector('#outarea_root2leafs').innerHTML = collect;
             }
-            console.log('mode', mode);
-            switch (mode) {
-                case 'single':
-                    decomposeRoot(latex, mode);
-                    break;
-                case 'all':
-                    decomposeRoot(latex, mode);
-                    break;
-                case 'tree':
-                    decomposeTree(latex);
-                    break;
-                default:
-                    console.error('case error');
-            }
-        }
 
-        async function decomposeRoot(latex, mode) {
-            Message('');
-            tree = bridge.createTree(latex);
-            updateTree(tree);
-            var rootNode = tree['root'];
-            // decomposeNodeBrackets is async and returns a Promise -> continue with .then(...
-            bridge.decomposeNodeBrackets(tree, rootNode, mode).then(
-                (result) => {
-                    // console.log('fulfilled', result);
-                    if (mode === 'all' && result === 'no left bracket') {
-                        result = 'End';
-                    };
-                    Message(result);
-                    updateTree(tree);
-                    // await bridge.waitforClickModule.waitForClick();
-                },
-                function (y) { console.log('rejected', y); }
-            );
-        }
-
-        async function decomposeTree(latex) {
-            tree = bridge.createTree(latex);
-            var node = tree['root'];
-            // debugger;
-            tree.withAllLeafs(function (level, node) {
-                // console.log('### decomposing ', node.content);
-                bridge.decomposeNodeBrackets(tree, node, 'tree').then(
+            async function decomposeRoot(latex, mode) {
+                Message('');
+                tree = bridge.createTree(latex);
+                updateTree(tree);
+                var rootNode = tree['root'];
+                // decomposeNodeBrackets is async and returns a Promise -> continue with .then(...
+                bridge.decomposeNodeBrackets(tree, rootNode, mode).then(
                     (result) => {
-                        // await bridge.waitforClickModule.waitForClick();
-                        // console.log('### decomposing of', node.content, 'fulfilled', result);
-                        // waitForClick needs init with waitforClickModule.setButtonId('...');
+                        // console.log('fulfilled', result);
+                        if (mode === 'all' && result === 'no left bracket') {
+                            result = 'End';
+                        };
+                        Message(result);
+                        updateTree(tree);
                     },
                     function (y) { console.log('rejected', y); }
                 );
-            }); //end withAllLeafs
-            console.log('decomposeTree: end withAllLeafs');
-            updateTree(tree);
-            return 'End';
-        }
-
-        function Message(message) {
-            var messageElement = document.getElementById('message');
-            // https://www.w3schools.com/howto/howto_js_add_class.asp
-            if (message === 'OK' || message === 'End') {
-                messageElement.classList.remove("error");
-            } else {
-                messageElement.classList.add("error");
             }
-            messageElement.innerHTML = message;
-        }
+
+            async function decomposeTree(latex) {
+                tree = bridge.createTree(latex);
+                // updateTree(tree);
+                var node = tree['root'];
+                tree.withAllLeafs(async function (level, node) {
+                    console.log('+++ decomposing ', node.content);
+                    bridge.decomposeNodeBrackets(tree, node, 'tree');
+                    console.log('--- decomposing of', node.content, 'fulfilled');
+                    // await clickWait.waitForClick();
+                });
+                console.log('decomposeTree: end withAllLeafs');
+                updateTree(tree);
+            }; //end withAllLeafs
+
+            function Message(message) {
+                var messageElement = document.getElementById('message');
+                // https://www.w3schools.com/howto/howto_js_add_class.asp
+                if (message === 'OK' || message === 'End') {
+                    messageElement.classList.remove("error");
+                } else {
+                    messageElement.classList.add("error");
+                }
+                messageElement.innerHTML = message;
+            }
+        })();
     </script>
 </head>
 
@@ -149,12 +161,12 @@
     </h3>
     <form>
         <!-- <fieldset data-role="controlgroup" data-type="horizontal"> -->
-        <input type="radio" id="single" name="single_or_all" onChange="handleSelect()" />
+        <input type="radio" id="single" name="single_or_all" />
         <label for="single">leftmost bracket of root</label>
-        <input type="radio" id="all" name="single_or_all" onChange="handleSelect()" checked="checked" />
+        <input type="radio" id="all" name="single_or_all" checked="checked" />
         <label for="all">all brackets of root</label>
-        <input type="radio" id="tree" name="single_or_all" onChange="handleSelect()" />
-        <label for="all">tree</label>
+        <input type="radio" id="tree" name="single_or_all" />
+        <label for="tree">tree</label>
         <!-- </fieldset> -->
     </form>
     <label for="latex">Choose a LaTeX string:</label>
@@ -165,7 +177,7 @@
     <p id="message">dummy message</p>
     <textarea id="outarea_root2leafs" cols='60'
         rows='15'>Select LaTeX string for root node&#13;&#10;Then press button.</textarea>
-    <!-- <div><button type="button" id='nextStepButton' style='display:inline-block'>Next Step</button></div> -->
+    <div><button type="button" id='nextStepButton'>Next Step</button></div>
     <hr>
     <div class="see_also"><a target="_blank" href="https://icons8.com/icon/bsvRLFXKXX09/branching-arrows"
             class="fdm__copy-html-content fdm__copy-html-content-link">Branching Arrows</a> favicon.ico by <a
