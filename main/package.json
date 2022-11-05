@@ -1,6 +1,6 @@
 {
   "name": "keybased-tree",
-  "version": "0.1.54",
+  "version": "0.1.55",
   "description": "define tree and node objects using a unique key for every node",
   "main": "src/js/index.js",
   "scripts": {
@@ -43,6 +43,7 @@
     "sirv-cli": "^1.0.14"
   },
   "dependencies": {
-    "bl": ">=5.0.0"
+    "bl": ">=5.0.0",
+    "timing": "^0.1.3"
   }
 }
