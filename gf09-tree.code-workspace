@@ -5,8 +5,8 @@
             "path": "./main"
         },
         {
-            "name": "ExperimentalTree",
-            "path": "../gf09-h5p/main/src2"
+            "name": "Key Based Tree - Obsolete",
+            "path": "./obsolete"
         }
     ],
     "settings": {
