@@ -13,7 +13,7 @@ import {
 import json from '@rollup/plugin-json';
 import replace from '@rollup/plugin-replace';
 import babel from '@rollup/plugin-babel';
-import {version} from './package.json';
+import { version } from './package.json';
 
 const production = process.env.PRODUCTION === "true";
 console.log('process.env.npm_package_version ');
@@ -21,27 +21,6 @@ console.log(process.env.npm_package_version);
 console.log("PRODUCTION", production, "(env: " + process.env.PRODUCTION + ")");
 
 const serveWanted = process.env.SERVE === "true";
-
-function getCopyTargets(filename) {
-	let targets = [];
-	let extension;
-	if (filename.endsWith(".js")) extension = "js";
-	else if (filename.endsWith(".css")) extension = "css";
-	else if (filename.endsWith(".svg")) extension = "svg";
-	else throw Error("Invalid extension");
-	targets.push({
-		src: `./public/${ filename }`,
-		dest: `./dest/build`
-	});
-	if (!production && extension === "js") {
-		targets.push({
-			src: `./public/${ filename.replace('.js', '.js.map') }`,
-			dest: `./dest/build`
-		});
-	}
-	console.log(targets);
-	return targets;
-}
 
 function resolveAfter4Seconds(x) {
 	return new Promise(resolve => {
@@ -112,8 +91,8 @@ export default [{
 		copy({
 			// see rollup-plugin-copy-watch
 			watch: 'public/css',
-			targets: getCopyTargets("build/bundle.js")
-				.concat(getCopyTargets("icon.svg")),
+			// targets: getCopyTargets("build/bundle.js"),
+			targets: [{ src: `./src/js/createDemoTree.js`, dest: `./public` }],
 			hook: "writeBundle"
 		})
 	]
