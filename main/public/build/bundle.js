@@ -311,16 +311,16 @@ var bridge = (function (exports) {
      * using addNode
      */
     function demoTree() {
-        var tree = createTree('Demo Tree');
-        var w = tree.addNode("root", "content-W");
-        var y = tree.addNode("root", "content-Y");
+        const tree = createTree('Demo Tree');
+        const w = tree.addNode("root", "content-W");
+        const y = tree.addNode("root", "content-Y");
         tree.addNode(w.key, "content-R");
-        // var a1 = tree.addNode(w.key, "content-A"); //for demo: double content is allowed
-        var s = tree.addNode(w.key, "content-S");
+        // const a1 = tree.addNode(w.key, "content-A"); //for demo: double content is allowed
+        const s = tree.addNode(w.key, "content-S");
         tree.addNode(w.key, "content-E");
-        var t = tree.addNode(s.key, "content-T");
+        const t = tree.addNode(s.key, "content-T");
         tree.addNode(y.key, "content-A");
-        var c = tree.addNode(y.key, "content-C");
+        const c = tree.addNode(y.key, "content-C");
 
         // removeNode(tree, 'dummy-key');
         // removeNode(tree, s.key);
@@ -329,286 +329,14 @@ var bridge = (function (exports) {
         // removeNode(tree, y.key);
 
         // insertOver - testcase
-        var k = tree.insertOver(c.key, 'content-K');
+        const k = tree.insertOver(c.key, 'content-K');
         console.log('inserted:', k);
-        var b = tree.insertOver(t.key, 'content-B');
+        const b = tree.insertOver(t.key, 'content-B');
         console.log('inserted:', b);
         return tree;
     }
 
-    var version = "0.1.59";
-
-    /**
-     * create an array of LaTeX strings with brackets for test purposes
-     */
-    function createTexStrings(){
-        var test = [];
-        test.push('4+5*[w+t]((3+z)+u)(r-v)');
-        test.push('\\int _1^2\\frac{1}{x^2}\\ dx={{result}}');
-        test.push('3.14 + \\left[\\left(2a+4b\\right)\\right]');
-        test.push('x =\\left[\\left(2a+(4b+c)\\right)\\left(7d-9e\\left(\\frac{z}{u+2(c+3)}\\right)\\right)\\right]');
-        test.push('u+\\left[\\left(2a+\\left\\{4b+c)\\right\\}\\right)\\left[7d-9e\\left(\\frac{z}{u+2(c+3)}\\right)\\right]\\right]');
-        test.push('v + \\left[2a+\\left(4b+c\\right)\\right][7d-9e\\left(\\frac{z-2}{\\left(u+2\\right)(c+3)}\\right)]');
-        test.push('\\left(s+\\left(a+2\\right)(5f-3\\left(w-r\\right))\\left(f-3\\right)-\\left(-s+22\\right)\\right)');
-        test.push('3.14+\\left(s+\\left(a+2\\right)[5f-3\\left(w-r\\right)]\\left(f-3\\right)-\\left(-s+22\\right)\\right)');
-        test.push('a+3*(x-5b)');
-        test.push('4+5*(w+t)[3-[z+u]]');
-        test.push('a+3x-5b'); // no brackets
-        test.push('\\left(a+3x-5b'); 
-        test.push('\\left(a+3x-5b)'); 
-        test.push('a+3x-5b\\right]'); 
-        return test;
-    }
-
-    // import { waitforClickModule } from './waitForClick.js';
-
-    /**
-     * 
-     * @param {*} haystack - LaTeX string with brackets to be looked for
-     * @returns {object} - bestPosition: position of leftmost bracket or -1 if no bracket found
-     * - bracket: kind of bracket corresponding to best position or null if no bracket found
-
-     */
-    function findLeftmostBracket(haystack) {
-        var found = '';
-        var bestPos = -1;
-        /**
-         * changes parameters found and bestPos
-         *
-         * @param {*} needle - bracket to be looked for
-         * changes variables bestPos and found
-         * @returns {object} bestPos - position of leftmost bracket or -1 if no bracket
-         * found - type of bracket at bestPos or empty string if no bracket
-         */
-        function lookForBracket(needle) {
-            var newPos = haystack.indexOf(needle);
-            var improvement = improvePosition(newPos);
-            // remember kind of bracket corresponding to best position
-            if (improvement) {
-                found = needle;
-                // console.log('improvement: found ' + needle + ' at position ' + bestPos);
-            }
-        }
-
-        function improvePosition(newPos) {
-            if (newPos !== -1) {
-                if (bestPos === -1) {
-                    // any nonnegative position is better than -1
-                    bestPos = newPos;
-                    return true;
-                } else {
-                    if (newPos < bestPos) {
-                        // smaller is better
-                        bestPos = newPos;
-                        return true;
-                    }
-                }
-            } //else 
-            // newPos === -1 means no improvement, do not change bestPos
-            return false;
-            //default: no improvement
-        }
-
-        // console.log(Array(20 + 1).join("-"));
-        console.log(haystack);
-        //look for different types of brackets
-        //and improve position if better (smaller but not -1)
-        lookForBracket('\\left(');
-        lookForBracket('\\left[');
-        lookForBracket('\\left\\{');
-        lookForBracket('(');
-        lookForBracket('[');
-        lookForBracket('{');
-
-        return {
-            leftPos: bestPos,
-            leftBracket: found
-        };
-    }
-
-
-    /** 
-     * 
-     * @param {string} haystack 
-     * @returns {object} message, leftBracket, leftpos, rightBracket, rightpos
-     * message = 'OK' or error message
-     * leftpos = position of first accurence of left bracket
-     * rightpos = position of corresponding(!) right bracket     
-     */
-    function findLeftmostBracketPair(haystack) {
-        var leftResult = findLeftmostBracket(haystack);
-
-        var message = 'OK';
-        var leftPos = -1;
-        var rightPos = -1;
-
-        const left2right = {
-            '(': ')',
-            '[': ']',
-            '{': '}',
-            '|': '|',
-            '\\left(': '\\right)',
-            '\\left[': '\\right]',
-            '\\left\\{': '\\right\\}',
-            '\\left|': '\\right|'
-        };
-        var rightBracket = left2right[leftResult.leftBracket];
-        if (typeof rightBracket === 'undefined') {
-            rightBracket = '';
-            message = 'no left bracket';
-        } else {
-            var pos;
-            var stop = false;
-            var weight = [];
-            for (var i = 0; i < haystack.length; i++) {
-                weight[i] = 0;
-            }
-            pos = -1;
-            do {
-                pos = haystack.indexOf(leftResult.leftBracket, pos + 1);
-                if (pos === -1) {
-                    stop = true;
-                } else {
-                    // left bracket has weight 1
-                    weight[pos] = 1;
-                    if (leftPos === -1) {
-                        leftPos = pos;
-                    }
-                }
-            } while (stop === false);
-            if (leftPos === -1) {
-                message = 'no left bracket found: ' + leftResult.leftBracket;
-            } else {
-                pos = -1;
-                stop = false;
-                do {
-                    pos = haystack.indexOf(rightBracket, pos + 1);
-                    if (pos === -1) {
-                        stop = true;
-                    } else {
-                        // right bracket has weight -1
-                        weight[pos] = -1;
-                    }
-                } while (stop === false);
-                // calculate sum of masses (and store in weight array)
-                for (i = 1; i < haystack.length; i++) {
-                    var sum = weight[i - 1] + weight[i];
-                    if (weight[i] === -1 && sum === 0) {
-                        rightPos = i;
-                        // short circuit; stop calculating sums
-                        break;
-                    }
-                    weight[i] = sum;
-                }
-                if (rightPos === -1) {
-                    message = 'no corresponding right bracket found: ' + rightBracket;
-                }
-            }
-        }
-        if (leftPos !== leftResult.leftPos) {
-            throw new Error('inconsistent left positions of brackets. This should not happen');
-        }
-        return {
-            message: message,
-            leftBracket: leftResult.leftBracket,
-            leftPos: leftPos,
-            rightBracket: rightBracket,
-            rightPos: rightPos,
-        }
-    }
-
-    /**
-     * 
-     * @param {*} tree - keybased tree object
-     * @param {*} node - node of tree containing bracket(s)
-     * @param {*} mode - if mode==='single, decompose single leftmost bracket
-     * else decompose all brackets of node but no inner brackets
-     * @returns 
-     */
-    async function decomposeNodeBrackets(tree, node, mode) {
-        // console.log('decomposeNodeBrackets', node.content, mode);
-        if (mode === 'single') {
-            result = decomposeSingleNodeBracket(tree, node);
-            return result;
-        } else {
-            do {
-                var result = decomposeSingleNodeBracket(tree, node);
-                // if (mode === 'tree') {
-                //     console.log('waitForClick');
-                //     await waitforClickModule.waitForClick();
-                // }
-            } while (result === 'OK');
-            return result;
-        }
-    }
-
-    function decomposeSingleNodeBracket(tree, node) {
-        var content = node.content;
-        var result = findLeftmostBracketPair(content);
-        // console.log(result.message, result.leftBracket, result.leftPos);
-        if (result.message === 'OK') {
-            var leftpart = content.substring(0, result.leftPos);
-            var middlepart = content.substring(result.leftPos + result.leftBracket.length, result.rightPos);
-            var rightpart = content.substring(result.rightPos + result.rightBracket.length);
-            node.content = leftpart + '§' + rightpart;
-            var bracketNode = tree.addNode(node.key, 'bracket-' + result.leftBracket);
-            var added = tree.addNode(bracketNode.key, middlepart);
-            console.log(result.leftPos + result.leftBracket, added.content);
-        }
-        return result.message;
-    }
-
-    // https://stackoverflow.com/questions/51374649/using-async-functions-to-await-user-input-from-onclick
-    var waitforClickModule = (function () {
-        var clicked = false;
-        var buttonElement, outputElement;
-
-        const timeout = async ms => new Promise(res => setTimeout(res, ms));
-
-        return {
-            setButtonId: function (buttonElementId) {
-                buttonElement = document.getElementById(buttonElementId);
-                // eslint-disable-next-line no-unused-vars
-                buttonElement.onclick = function clickEventHandler(ev) {
-                    clicked = true;
-                };
-            },
-            waitForClick: async function (ifClickedCallback) {
-                // pauses script
-                while (clicked === false) {
-                    await timeout(50);
-                    // console.log('waiting');
-                }
-                console.log('clicked');
-                if (ifClickedCallback){
-                    ifClickedCallback();
-                }
-                clicked = false; // reset var
-            },
-            // necessary only for demo
-            setOutputElementId: function (outputElementId) {
-                outputElement = document.getElementById(outputElementId);
-            },
-            // optional
-            demo: async function () {
-                var i = 0;
-                while (i <= 2) {
-                    outputElement.innerHTML = i;
-                    await this.waitForClick();
-                    i++;
-                }
-                // next lines cannot be placed after demo()!
-                outputElement.innerHTML = 'End';
-                console.log(buttonElement.style.display);
-                buttonElement.style.display = 'none';
-            }
-        }
-    })();
-
-    // usage:
-    // waitforClickModule.setButtonId('myButton');
-    // waitforClickModule.setOutputElementId('out');
-    // waitforClickModule.demo();
+    var version = "0.1.60";
 
     window.onload = function () {
         console.log('version (from package.json) ', version);
@@ -621,15 +349,11 @@ var bridge = (function (exports) {
     }
 
     exports.config = config;
-    exports.createTexStrings = createTexStrings;
     exports.createTree = createTree;
     exports.createTreeFromJson = createTreeFromJson;
-    exports.decomposeNodeBrackets = decomposeNodeBrackets;
     exports.demoTree = demoTree;
-    exports.findLeftmostBracketPair = findLeftmostBracketPair;
     exports.mainIsLoaded = mainIsLoaded;
     exports.version = version;
-    exports.waitforClickModule = waitforClickModule;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

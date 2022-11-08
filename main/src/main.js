@@ -5,9 +5,9 @@ import { createTree, createTreeFromJson } from './js/keybasedTree.js';
 import { demoTree } from './js/CreateDemoTree.js';
 import { version } from '../package.json';
 // for LaTeX parser
-import createTexStrings from './js/createLatexTestStrings.js';
-import { findLeftmostBracketPair, decomposeNodeBrackets} from './js/parseBrackets.js';
-import { waitforClickModule } from './js/waitForClick.js';
+// import createTexStrings from './js/createLatexTestStrings.js';
+// import { findLeftmostBracketPair, decomposeNodeBrackets} from './js/parseBrackets.js';
+// import { waitforClickModule } from './js/waitForClick.js';
 
 
 // after import of bundle, using <script src='build/bundle.js'></script>,
@@ -18,10 +18,10 @@ export {
     createTreeFromJson,
     version,
     demoTree,
-    createTexStrings,
-    findLeftmostBracketPair,
-    decomposeNodeBrackets,
-    waitforClickModule
+    // createTexStrings,
+    // findLeftmostBracketPair,
+    // decomposeNodeBrackets,
+    // waitforClickModule
 };
 
 window.onload = function () {

@@ -8,20 +8,20 @@ import {
  * using addNode
  */
 export function demoTree() {
-    var tree = createTree('Demo Tree');
-    var w = tree.addNode("root", "content-W");
-    var y = tree.addNode("root", "content-Y");
-    var a1 = tree.addNode(w.key, "content-R");
-    // var a1 = tree.addNode(w.key, "content-A"); //for demo: double content is allowed
-    var s = tree.addNode(w.key, "content-S");
-    var e = tree.addNode(w.key, "content-E");
-    var t = tree.addNode(s.key, "content-T");
-    var a2 = tree.addNode(y.key, "content-A");
-    var c = tree.addNode(y.key, "content-C");
+    const tree = createTree('Demo Tree');
+    const w = tree.addNode("root", "content-W");
+    const y = tree.addNode("root", "content-Y");
+    const a1 = tree.addNode(w.key, "content-R");
+    // const a1 = tree.addNode(w.key, "content-A"); //for demo: double content is allowed
+    const s = tree.addNode(w.key, "content-S");
+    const e = tree.addNode(w.key, "content-E");
+    const t = tree.addNode(s.key, "content-T");
+    const a2 = tree.addNode(y.key, "content-A");
+    const c = tree.addNode(y.key, "content-C");
 
     // removing nodes -testcase
     function removeNode(tree, key) {
-        var removedNodeOrErrorMessage = tree.remove(key);
+        const removedNodeOrErrorMessage = tree.remove(key);
         if (typeof removedNodeOrErrorMessage.key !== 'undefined') {
             console.log('removed:', removedNodeOrErrorMessage.content);
         } else {
@@ -36,9 +36,9 @@ export function demoTree() {
     // removeNode(tree, y.key);
 
     // insertOver - testcase
-    var k = tree.insertOver(c.key, 'content-K');
+    const k = tree.insertOver(c.key, 'content-K');
     console.log('inserted:', k);
-    var b = tree.insertOver(t.key, 'content-B');
+    const b = tree.insertOver(t.key, 'content-B');
     console.log('inserted:', b);
     return tree;
 }

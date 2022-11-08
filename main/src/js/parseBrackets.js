@@ -161,7 +161,12 @@ export function findLeftmostBracketPair(haystack) {
  * @param {*} node - node of tree containing bracket(s)
  * @param {*} mode - if mode==='single, decompose single leftmost bracket
  * else decompose all brackets of node but no inner brackets
- * @returns 
+ * @returns {object} 
+ *       message,
+ *       leftBracket,
+ *       leftPos,
+ *       rightBracket,
+ *       rightPos
  */
 export async function decomposeNodeBrackets(tree, node, mode) {
     // console.log('decomposeNodeBrackets', node.content, mode);
