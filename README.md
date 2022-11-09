@@ -1,4 +1,9 @@
 # keybased-tree
+## A JavaScript library to create, edit, and view a tree.
+* The nodes of the tree are connected by use of unique keys.
+* Keys are generated automatically.
+* Import/export of the tree as JSON object possible.
+
 ## inspired by
 * [An Easy Way to Build a Tree in JavaScript Using Object References](https://typeofnan.dev/an-easy-way-to-build-a-tree-with-object-references/) by Nick Scialli
   *  object references replaced by keys to make JSON.stringify(tree) work
