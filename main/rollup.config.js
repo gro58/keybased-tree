@@ -99,16 +99,16 @@ export default [{
 }];
 
 function serve() {
-	console.log("(run public) -> serving...");
+	console.log("(run serve) -> serving...");
 	let started = false;
 
 	return {
-		//writeBundle calls script 'npm run public', see package.json
+		//writeBundle calls script 'npm run serve', see package.json
 		writeBundle() {
 			console.log('writeBundle');
 			if (!started) {
 				started = true;
-				require('child_process').spawn('npm', ['run', 'public', '--', '--dev'], {
+				require('child_process').spawn('npm', ['run', 'serve', '--', '--dev'], {
 					env: process.env,
 					stdio: ['ignore', 'inherit', 'inherit'],
 					shell: true

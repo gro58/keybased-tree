@@ -1,7 +1,7 @@
 node_modules/
 obsolete/
 main/dest/
-main/docs/
+# main/docs/
 main/parserexamples/
 parseTree/
 cheat.md
