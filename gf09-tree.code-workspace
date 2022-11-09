@@ -2,6 +2,10 @@
     "folders": [
         {
             "name": "Key Based Tree",
+            "path": "./"
+        },
+        {
+            "name": "Key Based Tree - main",
             "path": "./main"
         },
         {
