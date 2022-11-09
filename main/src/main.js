@@ -10,7 +10,7 @@ import { version } from '../package.json';
 // import { waitforClickModule } from './js/waitForClick.js';
 
 
-// after import of bundle, using <script src='build/bundle.js'></script>,
+// after import of keybased-tree-bundle, using <script src='build/keybased-tree-bundle.js'></script>,
 // the bridge object with the following exports is available, e.g. using <script> in HTML
 export {
     config,

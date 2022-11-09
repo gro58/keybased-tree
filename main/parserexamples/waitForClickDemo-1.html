@@ -7,12 +7,12 @@
     <title>keybased-tree - waitForClick demo</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='./css/keybasedTree.css'>
-    <script src='build/bundle.js'></script>
+    <script src='build/keybased-tree-bundle.js'></script>
     <script type="module">
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
             document.querySelector('#versioninfo').innerHTML = bridge.version;
-            var clickWait = bridge.waitforClickModule; //bridge access via bundle.js
+            var clickWait = bridge.waitforClickModule; //bridge access via keybased-tree-bundle.js
             clickWait.setButtonId('myButton');
             clickWait.setOutputElementId('out');
             clickWait.demo();

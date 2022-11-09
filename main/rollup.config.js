@@ -48,7 +48,7 @@ export default [{
 		sourcemap: !production,
 		format: 'iife',
 		name: 'bridge',
-		file: 'public/build/bundle.js'
+		file: 'public/build/keybased-tree-bundle.js'
 	},
 	plugins: [
 		replace({
@@ -91,7 +91,7 @@ export default [{
 		copy({
 			// see rollup-plugin-copy-watch
 			watch: 'public/css',
-			// targets: getCopyTargets("build/bundle.js"),
+			// targets: getCopyTargets("build/keybased-tree-bundle.js"),
 			targets: [{ src: `./src/js/createDemoTree.js`, dest: `./public` }],
 			hook: "writeBundle"
 		})
