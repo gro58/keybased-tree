@@ -4,6 +4,10 @@
 * Keys are generated automatically.
 * Import/export of the tree as JSON object possible.
 
+## Online demo
+* [http://www2.formelapplet.de/keybased-tree/public/index.html](http://www2.formelapplet.de/keybased-tree/public/index.html)
+* The online demo does not always show the latest version.
+
 ## inspired by
 * [An Easy Way to Build a Tree in JavaScript Using Object References](https://typeofnan.dev/an-easy-way-to-build-a-tree-with-object-references/) by Nick Scialli
   *  object references replaced by keys to make JSON.stringify(tree) work
