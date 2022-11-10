@@ -336,7 +336,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.61";
+    var version = "0.1.66";
 
     window.onload = function () {
         console.log('version (from package.json) ', version);
