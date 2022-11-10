@@ -5,7 +5,7 @@ import {
 } from './traverseTree.js';
 
 // variable tree has to be definde outside of createTree to have access to createNode
-var tree = {
+const tree = {
     addNode: function (parentKey, newContent) {
         if (parentKey) {
             return createNode(this, parentKey, newContent);
@@ -90,10 +90,10 @@ export function createTreeFromJson(jsonTree) {
  * @returns the new node or null, if parent key not found in tree
  */
 function createNode(tree, parentKey, newContent) {
-    var parent = tree[parentKey];
+    const parent = tree[parentKey];
     if (parent) {
-        var newKey = nonexistingRandomKey(tree, 3);
-        var newNode = {
+        const newKey = nonexistingRandomKey(tree, 3);
+        const newNode = {
             key: newKey,
             parentKey: parentKey,
             children: [],
@@ -118,14 +118,14 @@ function createNode(tree, parentKey, newContent) {
  * @returns the new node
  */
 function insertNodeOver(tree, key, newContent) {
-    var node = tree[key];
+    const node = tree[key];
     if (!node) {
         return 'node with key "' + key + '" does not exist';
     }
-    var parent = tree[node.parentKey];
+    const parent = tree[node.parentKey];
     if (parent) {
-        var newKey = nonexistingRandomKey(tree, 3);
-        var newNode = {
+        const newKey = nonexistingRandomKey(tree, 3);
+        const newNode = {
             key: newKey,
             // parentKey: node.parentKey,
             parentKey: parent.key,
@@ -135,7 +135,7 @@ function insertNodeOver(tree, key, newContent) {
             //     return (this.children.length === 0);
             // }
         };
-        var childIndex = parent.children.indexOf(node.key);
+        const childIndex = parent.children.indexOf(node.key);
         parent.children[childIndex] = newKey;
         node.parentKey = newKey;
         tree[newKey] = newNode;
@@ -146,11 +146,11 @@ function insertNodeOver(tree, key, newContent) {
 }
 
 function removeNode(tree, key) {
-    var node = tree[key];
+    const node = tree[key];
     if (node) {
         console.log(node.key, 'has children', node.children);
         // TODO necessary? if(node.children && node.children.length > 0){}
-        var parent, childIndex, node_clone;
+        let parent, childIndex, node_clone;
         switch (node.children.length) {
             case 0:
                 // no children
@@ -171,8 +171,8 @@ function removeNode(tree, key) {
                     parent = tree[node.parentKey];
                     if (parent) {
                         childIndex = parent.children.indexOf(key);
-                        var grandchildKey = node.children[0];
-                        var grandchild = tree[grandchildKey];
+                        const grandchildKey = node.children[0];
+                        const grandchild = tree[grandchildKey];
                         // replace key of child with key of grandchild in array of children of parent
                         parent.children[childIndex] = grandchildKey;
                         // replace parentKey of grandchild with parentKey of node
@@ -200,11 +200,11 @@ function removeNode(tree, key) {
  * @returns {string} - consists of chars randomly picked from 'characters'
  */
 function randomKey(length) {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
-    // var characters = 'abc'; //for test
-    var numOfChars = characters.length;
-    for (var i = 0; i < length; i++) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+    // const characters = 'abc'; //for test
+    const numOfChars = characters.length;
+    for (let i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * numOfChars));
     }
     return result;
@@ -213,11 +213,11 @@ function randomKey(length) {
 function nonexistingRandomKey(tree, length) {
     const numOfTries = 10;
     // const numOfTries = 5; // for test
-    var existingKeys = Object.keys(tree);
+    const existingKeys = Object.keys(tree);
     // console.log('existingKeys', existingKeys);
-    var newKey = null;
-    for (var i = 0; i < numOfTries; i++) {
-        var candidate = randomKey(length);
+    let newKey = null;
+    for (let i = 0; i < numOfTries; i++) {
+        const candidate = randomKey(length);
         if (existingKeys.indexOf(candidate) === -1) {
             // candidate is no existing key
             newKey = candidate;

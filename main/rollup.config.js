@@ -37,6 +37,7 @@ async function myTest() {
 	var y = await resolveAfter4Seconds('dummy argument');
 	// console.log(y);
 	console.log('version =', version);
+	console.log('process.env.npm_package_version =', process.env.npm_package_version);
 }
 
 myTest();
