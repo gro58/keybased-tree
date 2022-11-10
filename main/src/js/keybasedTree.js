@@ -57,8 +57,8 @@ var tree = {
  */
 export function createTree(rootcontent) {
     // newTree inherits methods of tree object 
-    var newTree = Object.create(tree);
-    var rootNode = {
+    const newTree = Object.create(tree);
+    const rootNode = {
         key: 'root',
         parentKey: null,
         children: [],

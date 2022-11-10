@@ -10,7 +10,7 @@
     <script src='build/keybased-tree-bundle.js'></script>
     <script>
         console.log('version (from package.json) ', bridge.version);
-        var tree_json = {
+        const tree_json = {
             "root": {
                 "key": "root",
                 "parentKey": null,
@@ -78,17 +78,17 @@
                 "content": "content-B"
             }
         }
-        var tree = bridge.createTreeFromJson(tree_json);
+        const tree = bridge.createTreeFromJson(tree_json);
 
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
             // console.log(tree);
 
             // create the unordered list for the tree view element
-            var u_list = '';
+            let u_list = '';
             // define what to do when entering/leaving a node while traversing the tree
-            var logNodeToUL_Enter = function (level, currentNode) {
-                var space = Array(level + 1).join("  ");
+            const logNodeToUL_Enter = function (level, currentNode) {
+                const space = Array(level + 1).join("  ");
                 if (currentNode.children.length === 0) {
                     // leaf
                     u_list += space;
@@ -104,8 +104,8 @@
                     u_list += '<ul class="nested">&#13;&#10;';
                 }
             };
-            var logNodeToUL_Leave = function (level, currentNode) {
-                var space = Array(level + 1).join("  ");
+            const logNodeToUL_Leave = function (level, currentNode) {
+                const space = Array(level + 1).join("  ");
                 if (currentNode.children.length === 0) {
                     u_list += "</li>&#13;&#10;";
                 } else {
@@ -125,9 +125,9 @@
             document.querySelector('#out').textContent = JSON.stringify(tree);
 
             // event listeners for treeview - make nodes expand/collapse on click
-            var toggler = document.getElementsByClassName("caret");
+            const toggler = document.getElementsByClassName("caret");
             // console.log(toggler, toggler.length);
-            for (var i = 0; i < toggler.length; i++) {
+            for (let i = 0; i < toggler.length; i++) {
                 toggler[i].addEventListener("click", function (ev) {
                     // console.log('clicked:', ev);
                     this.parentElement.querySelector(".nested").classList.toggle("active");
@@ -137,18 +137,18 @@
         });
 
         function expandAll() {
-            var caretList = document.getElementsByClassName("caret");
+            const caretList = document.getElementsByClassName("caret");
             // console.log(caretList, caretList.length);
-            for (var i = 0; i < caretList.length; i++) {
+            for (let i = 0; i < caretList.length; i++) {
                 caretList[i].parentElement.querySelector(".nested").classList.add("active");
                 caretList[i].classList.add("caret-down");
             }
         }
 
         function collapseAll() {
-            var caretList = document.getElementsByClassName("caret");
+            const caretList = document.getElementsByClassName("caret");
             // console.log(caretList, caretList.length);
-            for (var i = 0; i < caretList.length; i++) {
+            for (let i = 0; i < caretList.length; i++) {
                 caretList[i].parentElement.querySelector(".nested").classList.remove("active");
                 caretList[i].classList.remove("caret-down");
             }

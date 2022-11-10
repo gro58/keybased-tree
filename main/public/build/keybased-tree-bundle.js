@@ -128,8 +128,8 @@ var bridge = (function (exports) {
      */
     function createTree(rootcontent) {
         // newTree inherits methods of tree object 
-        var newTree = Object.create(tree);
-        var rootNode = {
+        const newTree = Object.create(tree);
+        const rootNode = {
             key: 'root',
             parentKey: null,
             children: [],
@@ -336,7 +336,7 @@ var bridge = (function (exports) {
         return tree;
     }
 
-    var version = "0.1.66";
+    var version = "0.1.68";
 
     window.onload = function () {
         console.log('version (from package.json) ', version);
