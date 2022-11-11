@@ -11,13 +11,13 @@
     <script>
         // console.log('bridge', bridge);
         console.log('version (from package.json) ', bridge.version);
-        var tree = bridge.demoTree('Demo Tree Root Content');
+        const tree = bridge.demoTree('Demo Tree Root Content');
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
             // console.log(tree);
-            var collect = '';
-            var logNodeWithDashes = function (level, currentNode) {
-                var dashes = Array(level + 1).join("--");
+            let collect = '';
+            const logNodeWithDashes = function (level, currentNode) {
+                const dashes = Array(level + 1).join("--");
                 collect += dashes;
                 collect += currentNode.content;
                 if (currentNode.children.length === 0) {
