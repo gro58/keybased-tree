@@ -10,7 +10,7 @@
     <link rel="icon" href="./favicon.ico">
     <script src='build/keybased-tree-bundle.js'></script>
     <script>
-        var tree = bridge.demoTree('Demo Tree Root Content');
+        let tree = bridge.demoTree('Demo Tree Root Content');
         console.log(tree);
         document.addEventListener("DOMContentLoaded", function () {
             console.log("DOM is loaded");
@@ -19,7 +19,7 @@
         });
 
         function refreshTreeView() {
-            var temp = JSON.stringify(tree);
+            let temp = JSON.stringify(tree);
             temp = temp.substring(1); //remove opening {
             temp = temp.substring(0, temp.length - 1); //remove trailing }
             temp = temp.replace(/},/g, "},<br>");
@@ -27,9 +27,9 @@
             // document.querySelector('#out').textContent = temp;
             document.querySelector('#out').innerHTML = temp;
             // console.log(tree);
-            var collect = '';
-            var logNodeWithDashes = function (level, currentNode) {
-                var dashes = Array(level + 1).join("--");
+            let collect = '';
+            const logNodeWithDashes = function (level, currentNode) {
+                const dashes = Array(level + 1).join("--");
                 collect += '<li>' + dashes + '<span id="' + currentNode.key + '" class="node">';
                 collect += currentNode.content;
                 if (currentNode.children.length === 0) {
@@ -49,12 +49,12 @@
             document.querySelector('#outarea').innerHTML = collect;
 
             // event listeners for updating 'selected node' data if node clicked
-            var nodeList = document.getElementsByClassName("node");
+            const nodeList = document.getElementsByClassName("node");
             // console.log(nodeList, nodeList.length);
-            for (var i = 0; i < nodeList.length; i++) {
+            for (let i = 0; i < nodeList.length; i++) {
                 nodeList[i].addEventListener("click", function (ev) {
-                    var nodeId = ev.target.id;
-                    var nodeContent = tree[nodeId].content;
+                    const nodeId = ev.target.id;
+                    const nodeContent = tree[nodeId].content;
                     document.querySelector('#node_id').innerHTML = nodeId;
                     document.querySelector('#node_content').innerHTML = nodeContent;
                     markNodeAsSelected(ev.target);
@@ -64,9 +64,9 @@
         }; //end of refreshTreeView()
 
         function markNodeAsSelected(targetNode) {
-            var nodeList = document.getElementsByClassName("node");
+            const nodeList = document.getElementsByClassName("node");
             // deselect all nodes
-            for (var i = 0; i < nodeList.length; i++) {
+            for (let i = 0; i < nodeList.length; i++) {
                 nodeList[i].classList.remove("selected");
             };
             // mark targetNode as selected
@@ -74,14 +74,14 @@
         };
 
         function addNode(ev) {
-            var parentKey = document.getElementById('node_id').innerHTML;
+            const parentKey = document.getElementById('node_id').innerHTML;
             // https://stackoverflow.com/questions/11563638/how-do-i-get-the-value-of-text-input-field-using-javascript
-            var newContent = document.getElementById('ContentInputId').value;
+            let newContent = document.getElementById('ContentInputId').value;
             if (newContent === '') {
                 newContent = '&lt;empty&gt;';
             }
             console.log('add', newContent, 'to node with key', parentKey);
-            var response = tree.addNode(parentKey, newContent);
+            const response = tree.addNode(parentKey, newContent);
             console.log(response);
             if (typeof response.key !== 'undefined') {
                 refreshTreeView();
@@ -91,13 +91,13 @@
         };
 
         function insertOver(ev) {
-            var key = document.getElementById('node_id').innerHTML;
-            var newContent = document.getElementById('ContentInputId').value;
+            const key = document.getElementById('node_id').innerHTML;
+            let newContent = document.getElementById('ContentInputId').value;
             if (newContent === '') {
                 newContent = '&lt;empty&gt;';
             }
             console.log('insert', newContent, 'over node with key', key);
-            var response = tree.insertOver(key, newContent);
+            const response = tree.insertOver(key, newContent);
             console.log(response);
             if (typeof response.key !== 'undefined') {
                 refreshTreeView();
@@ -107,9 +107,9 @@
         }
 
         function removeNode(ev) {
-            var key = document.getElementById('node_id').innerHTML;
+            const key = document.getElementById('node_id').innerHTML;
             console.log('remove node with key', key);
-            var response = tree.remove(key);
+            const response = tree.remove(key);
             console.log(response);
             if (typeof response.key !== 'undefined') {
                 refreshTreeView();
@@ -119,7 +119,7 @@
         }
 
         function ErrorMessage(message) {
-            var errorElement = document.getElementById('errormessage');
+            const errorElement = document.getElementById('errormessage');
             if (message.length > 0) {
                 errorElement.innerHTML = message;
                 // https://www.w3schools.com/howto/howto_js_add_class.asp
