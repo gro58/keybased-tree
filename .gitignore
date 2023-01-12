@@ -2,8 +2,6 @@ node_modules/
 obsolete/
 main/dest/
 # main/docs/
-main/parserexamples/
-parseTree/
 cheat.md
 npm_cheat.md
 gf09-tree.code-workspace
