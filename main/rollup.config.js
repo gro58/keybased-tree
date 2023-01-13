@@ -45,12 +45,20 @@ console.log('after start of myTest');
 
 export default [{
 	input: 'src/main.js',
-	output: {
-		sourcemap: !production,
-		format: 'iife',
-		name: 'bridge',
-		file: 'public/build/keybased-tree-bundle.js'
-	},
+	output: [
+		{
+			sourcemap: !production,
+			format: 'iife',
+			name: 'bridge',
+			file: 'public/build/keybased-tree-bundle.js'
+		},
+		{
+			sourcemap: !production,
+			format: 'es',
+			name: 'esbridge',
+			file: 'public/build/keybased-tree-bundle.esm.js'
+		}
+	],
 	plugins: [
 		replace({
 			'process.env.NODE_ENV': JSON.stringify(production ? 'production' : 'development'),
