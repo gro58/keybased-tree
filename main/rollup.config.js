@@ -90,9 +90,9 @@ export default [{
 		// browser on changes when serving
 
 		// enable/disable livereload here AND AT IMPORTS by uncommenting/commenting
-		!production && livereload("public", {
-			port: 5001
-		}),
+		// !production && livereload("public", {
+		// 	port: 5001
+		// }),
 
 		// If we're building for production, minify
 		production && terser(),
