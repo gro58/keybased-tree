@@ -1,8 +1,8 @@
 {
   "name": "@gro58/keybased-tree",
-  "version": "0.1.75",
+  "version": "0.1.76",
   "description": "define tree and node objects using a unique key for every node",
-  "main": "src/js/index.js",
+  "main": "public/build/keybased-tree-bundle.esm.js",
   "scripts": {
     "start": "cross-env PRODUCTION=\"false\" SERVE=\"true\" rollup -c -w",
     "push": "npm run patch && npm run push:git && npm run serve",
