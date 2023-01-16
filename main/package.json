@@ -1,6 +1,6 @@
 {
   "name": "@gro58/keybased-tree",
-  "version": "0.1.76",
+  "version": "0.1.77",
   "description": "define tree and node objects using a unique key for every node",
   "main": "public/build/keybased-tree-bundle.esm.js",
   "scripts": {
