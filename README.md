@@ -8,7 +8,7 @@
 * [https://www.npmjs.com/package/@gro58/keybased-tree](https://www.npmjs.com/package/@gro58/keybased-tree)
 
 ## Online demo
-* [http://www2.formelapplet.de/keybased-tree/public/index.html](http://www2.formelapplet.de/keybased-tree/public/index.html)
+* [https://www.grossmann.info/keybased-tree/public/index.html](https://www.grossmann.info/keybased-tree/public/index.html)
 * The online demo does not always show the latest version.
 
 ## inspired by
